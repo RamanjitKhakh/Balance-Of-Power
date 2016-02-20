@@ -76,7 +76,9 @@ public class ServerNetworkHandler implements MessageListener, ConnectionListener
     public void connectionRemoved(Server server, HostedConnection conn) {
         // TODO
         int connID = conn.getId();
+        Message m;
         System.out.println("Ayy lmao");
-        gameServer.removeConnection(connID);
+        m = gameServer.removeConnection(connID);
+        broadcast(m);
     }
 }
