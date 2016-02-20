@@ -9,6 +9,7 @@ import com.jme3.material.Material;
 import com.jme3.math.ColorRGBA;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
+import com.jme3.scene.Spatial;
 import com.jme3.scene.shape.Sphere;
 import server.FieldData;
 
@@ -16,11 +17,11 @@ import server.FieldData;
  *
  * @author ramanjit
  */
-public class Ball extends Sphere{
+public class Ball extends Geometry{
     int id = -1;
     
-    public Ball(int id, int triX, int triY , int rad){
-        super(triX, triY, rad);
+    public Ball(int id, String s, Sphere sp){
+        super(s,sp);
         this.id = id;
     }
 }

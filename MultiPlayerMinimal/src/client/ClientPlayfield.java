@@ -24,8 +24,8 @@ public class ClientPlayfield {
     }
     
     public void addSphere(FieldData fd){
-        Ball s = new Ball(fd.id, 32,32,1);
-        Geometry sg = new Geometry("",s);
+        Sphere s = new Sphere(32,32,1);
+        Ball sg = new Ball(fd.id, "",s);
         Material mat = new Material(sa.getAssetManager(), "Common/MatDefs/Light/Lighting.j3md");
         mat.setBoolean("UseMaterialColors", true);
         mat.setColor("Ambient", fd.color);
