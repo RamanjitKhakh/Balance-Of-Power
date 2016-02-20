@@ -3,6 +3,7 @@ package client;
 import com.jme3.app.DebugKeysAppState;
 import com.jme3.app.SimpleApplication;
 import com.jme3.app.StatsAppState;
+import com.jme3.collision.CollisionResult;
 import com.jme3.collision.CollisionResults;
 import com.jme3.input.KeyInput;
 import com.jme3.input.MouseInput;
@@ -25,6 +26,7 @@ import com.jme3.system.AppSettings;
 import com.jme3.util.SkyFactory;
 import java.awt.Dimension;
 import java.awt.Toolkit;
+import java.util.ArrayList;
 import messages.NewClientMessage;
 import server.FieldData;
 
@@ -34,6 +36,8 @@ public class GameClient extends SimpleApplication implements ClientNetworkListen
 	private int ID = -1;
 	protected ClientNetworkHandler networkHandler;
 	private ClientPlayfield playfield;
+	private ArrayList<Ball> ballCollisionList;
+	
 
 	// -------------------------------------------------------------------------
 	public static void main(String[] args) {
@@ -56,6 +60,7 @@ public class GameClient extends SimpleApplication implements ClientNetworkListen
 	// -------------------------------------------------------------------------
 	@Override
 	public void simpleInitApp() {
+		ballCollisionList = new ArrayList<Ball>();
 		setPauseOnLostFocus(false);
 		//
 		// CONNECT TO SERVER!
@@ -154,8 +159,14 @@ public class GameClient extends SimpleApplication implements ClientNetworkListen
 
 	// key action
 	public void onAction(String name, boolean isPressed, float tpf) {
-		if (isPressed) {
+		
+
+		if (name.equals("TB_MOUSELEFT") && isPressed) {
+		//System.out.println("left mouse button clicked!");
+		getRayCollision();
 		}
+
+
 	}
 
 	// -------------------------------------------------------------------------
@@ -172,10 +183,12 @@ public class GameClient extends SimpleApplication implements ClientNetworkListen
 	}
 
 	public void onAnalog(String name, float value, float tpf) {
+		/*
 		if (name.equals("TB_MOUSELEFT")) {
 			//System.out.println("left mouse button clicked!");
 			getRayCollision();
 		}
+		*/
 	}
 
 	private Vector3f getRayCollision() {
@@ -188,32 +201,34 @@ public class GameClient extends SimpleApplication implements ClientNetworkListen
 		// Aim the ray from the clicked spot forwards.
 		Ray ray = new Ray(click3d, dir);
 		
-		
 		// Collect intersections between ray and all nodes in results list.
 		//trackBallNode.collideWith(ray, results);
-		
 		for(Spatial s: rootNode.getChildren())
 		{
-			s.collideWith(ray, results);
+			if(s instanceof Ball)
+			{
+				if(!ballCollisionList.contains(s))
+				{
+					s.collideWith(ray, results);
+					ballCollisionList.add((Ball)s);
+				}
+				
+			}
+				
 		}
 		
 		// (Print the results so we see what is going on:)
 		float minDist = Float.MAX_VALUE;
-		for (int i = 0; i < results.size(); i++) {
-			Vector3f pt = results.getCollision(i).getContactPoint();
-			String target = results.getCollision(i).getGeometry().getName();
+		
+		CollisionResult cr = results.getClosestCollision();
+		Vector3f pt = cr.getContactPoint();
+		if(cr.getGeometry() instanceof Ball)
+		{
+			int target = ((Ball)cr.getGeometry()).id;
 			System.out.println("ray collision with "+ target);
-			/*
-			if (target.equals("TRACKBALL")) {
-				float dist = results.getCollision(i).getDistance();
-				if (dist < minDist) {
-					hitVector = pt;
-					minDist = dist;
-					System.out.println(hitVector);
-				}
-			}
-			*/
 		}
+		
+		ballCollisionList.clear();
 		return (hitVector);
 	}
 }
