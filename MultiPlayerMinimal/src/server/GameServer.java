@@ -39,6 +39,10 @@ public class GameServer implements ServerNetworkListener {
     public void messageReceived(Message msg) {
 
     }
+    
+    public void removeConnection(int id){
+        playfield.removeElement(id);
+    }
 
     // -------------------------------------------------------------------------
     public Message newConnectionReceived(int connectionID) throws Exception {
