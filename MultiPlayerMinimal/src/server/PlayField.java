@@ -41,4 +41,14 @@ public class PlayField {
         // (TODO)
         return (true);
     }
+    
+    public void removeElement(int id){
+        //data.removeFirstOccurrence(new FieldData(id, x, y, z, c));
+        for(int i = 0; i < data.size(); i++){
+            if(data.get(i).id == id){
+                data.remove(data.get(i));
+            }
+        }
+        System.out.println("there are " + data.size() + " balls left from the server");
+    }
 }

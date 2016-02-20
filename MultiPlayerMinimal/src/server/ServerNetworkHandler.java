@@ -41,7 +41,7 @@ public class ServerNetworkHandler implements MessageListener, ConnectionListener
     // -------------------------------------------------------------------------
     public void connectionAdded(Server server, HostedConnection conn) {
         int connID = conn.getId();
-        System.out.println("Client " + connID + " connected");
+        System.out.println("Fuccboi " + connID + " connected");
         Message m;
         try {
             // gameServer.newConnectionReceived throws an Exception
@@ -75,5 +75,10 @@ public class ServerNetworkHandler implements MessageListener, ConnectionListener
     // -------------------------------------------------------------------------
     public void connectionRemoved(Server server, HostedConnection conn) {
         // TODO
+        int connID = conn.getId();
+        Message m;
+        System.out.println("Ayy lmao");
+        m = gameServer.removeConnection(connID);
+        broadcast(m);
     }
 }
