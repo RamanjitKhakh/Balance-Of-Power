@@ -12,7 +12,7 @@ import messages.Registration;
 
 
 public class ClientNetworkHandler implements MessageListener {
-    private static final String IPADDRESS = "129.32.93.189";
+    private static final String IPADDRESS = "localhost";
     private static final int PORT = 6143;
     private Client client;
     private int ID = -1;

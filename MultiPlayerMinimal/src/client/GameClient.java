@@ -27,6 +27,7 @@ import com.jme3.util.SkyFactory;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.util.ArrayList;
+import java.util.List;
 import messages.NewClientMessage;
 import server.FieldData;
 
@@ -177,7 +178,35 @@ public class GameClient extends SimpleApplication implements ClientNetworkListen
 			if (this.ID == -1) {
 				initGame(ncm);
 			} else {
-				playfield.addSphere(ncm.field.getLast());
+                            System.out.println("printing current playfield....");
+                            List<Ball> balls = playfield.sa.getRootNode().descendantMatches(Ball.class);
+                            
+                            if(ncm.field.size() > balls.size()){
+                                System.out.println("adding...");
+                                playfield.addSphere(ncm.field.getLast());
+                            }else{
+                                System.out.println("removing...");
+                                for(int u =0 ; u < balls.size(); u++){
+                                    //System.out.println(balls.get(u).id + " is currently included!");
+                                    boolean found = false;
+                                    for(int i = 0; i < ncm.field.size(); i++){
+                                        FieldData fd = ncm.field.get(i);
+                                        //System.out.println(fd.id + " " + fd.x + " , " + fd.y + " , " + fd.z + ".");
+                                        if(fd.id == balls.get(u).id){
+                                            found = true;
+                                        }
+                                    }
+                                    
+                                    if(found == false){
+                                        balls.get(u).removeFromParent();
+                                        //playfield.sa.getRootNode().detachChild(balls.get(u));
+                                    }
+                                    
+                                }
+                            }
+                            
+                            
+                            
 			}
 		}
 	}
