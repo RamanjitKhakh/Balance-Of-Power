@@ -5,6 +5,8 @@ import com.jme3.app.SimpleApplication;
 import com.jme3.app.StatsAppState;
 import com.jme3.collision.CollisionResult;
 import com.jme3.collision.CollisionResults;
+import com.jme3.font.BitmapFont;
+import com.jme3.font.BitmapText;
 import com.jme3.input.KeyInput;
 import com.jme3.input.MouseInput;
 import com.jme3.input.controls.ActionListener;
@@ -90,6 +92,7 @@ public class GameClient extends SimpleApplication implements ClientNetworkListen
 		initLightandShadow();
 		initPostProcessing();
 		initKeys();
+                initHUD();
 	}
 
 	// -------------------------------------------------------------------------
@@ -114,6 +117,23 @@ public class GameClient extends SimpleApplication implements ClientNetworkListen
 		setDisplayStatView(false);
 	}
 
+        
+        // ------------------------------------------------------------------------
+        private void initHUD(){
+           BitmapText health;
+           BitmapFont bmf = this.getAssetManager().loadFont("Interface/Fonts/ArialBlack.fnt");
+           health = new BitmapText(bmf);
+          
+           health.setSize(bmf.getCharSet().getRenderedSize() * 1f);
+           health.setColor(ColorRGBA.White);
+           health.setText("Your Health is " + playerBall.hp);
+           
+           float lineY = settings.getHeight() - health.getLineHeight();
+           float lineX = 0;
+           health.setLocalTranslation(lineX, lineY, 0f);
+           this.getGuiNode().attachChild(health);
+           
+        }
 	// -------------------------------------------------------------------------
 	private void initLightandShadow() {
 		// Light1: white, directional
