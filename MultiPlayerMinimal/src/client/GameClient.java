@@ -298,6 +298,11 @@ public class GameClient extends SimpleApplication implements ClientNetworkListen
                                     
                                     if(found == false){
                                         balls.get(u).removeFromParent();
+					
+					if(balls.get(u).id == target )
+					{
+						rootNode.detachChildNamed("arrowgeo");
+					}
                                         //playfield.sa.getRootNode().detachChild(balls.get(u));
                                     }
                                     
