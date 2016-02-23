@@ -19,6 +19,7 @@ import server.FieldData;
  */
 public class Ball extends Geometry{
     int id = -1;
+    int hp = 100;
     
     public Ball(int id, String s, Sphere sp){
         super(s,sp);

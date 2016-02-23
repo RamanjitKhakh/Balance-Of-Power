@@ -23,7 +23,7 @@ public class ClientPlayfield {
         this.sa = sa;
     }
     
-    public void addSphere(FieldData fd){
+    public Ball addSphere(FieldData fd){
         Sphere s = new Sphere(32,32,1);
         Ball sg = new Ball(fd.id, "",s);
         Material mat = new Material(sa.getAssetManager(), "Common/MatDefs/Light/Lighting.j3md");
@@ -35,6 +35,7 @@ public class ClientPlayfield {
         sg.setMaterial(mat);
         sg.setLocalTranslation(fd.x, fd.y, fd.z);
         sa.getRootNode().attachChild(sg);
+	return sg;
     }
     
 }

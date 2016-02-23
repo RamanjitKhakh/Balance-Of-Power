@@ -13,6 +13,7 @@ import com.jme3.input.controls.KeyTrigger;
 import com.jme3.input.controls.MouseButtonTrigger;
 import com.jme3.light.AmbientLight;
 import com.jme3.light.DirectionalLight;
+import com.jme3.material.Material;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.Ray;
 import com.jme3.math.Vector2f;
@@ -20,12 +21,16 @@ import com.jme3.math.Vector3f;
 import com.jme3.network.Message;
 import com.jme3.post.FilterPostProcessor;
 import com.jme3.post.filters.BloomFilter;
+import com.jme3.scene.Geometry;
 import com.jme3.scene.Spatial;
+import com.jme3.scene.debug.Arrow;
+import com.jme3.scene.shape.Sphere;
 import com.jme3.shadow.DirectionalLightShadowRenderer;
 import com.jme3.system.AppSettings;
 import com.jme3.util.SkyFactory;
 import java.awt.Dimension;
 import java.awt.Toolkit;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -46,6 +51,11 @@ public class GameClient extends SimpleApplication implements ClientNetworkListen
         // need this when sending message to server (I think)
         private LinkedList<FieldData> currentPlayField;
         private int target; // ID of the target of each action
+	Arrow targetArrow;
+	Geometry arrowGeo;
+	Material arrowMat;  //Material for arrow
+	Ball playerBall;    //The ball object of this client's player
+	
 	
 
 	// -------------------------------------------------------------------------
@@ -122,6 +132,15 @@ public class GameClient extends SimpleApplication implements ClientNetworkListen
 		DirectionalLightShadowRenderer dlsr = new DirectionalLightShadowRenderer(assetManager, 1024, 1);
 		dlsr.setLight(sun);
 		viewPort.addProcessor(dlsr);
+		
+		//arrow material
+		 arrowMat = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
+		//arrowMat.setBoolean("UseMaterialColors", true);
+		//arrowMat.setTexture("DiffuseMap", assetManager.loadTexture("Textures/DSCF3091.JPG"));
+		//arrowMat.setColor("Diffuse", ColorRGBA.White);
+		arrowMat.setColor("Color", ColorRGBA.White);
+		//arrowMat.setColor("Specular", ColorRGBA.White);
+		//arrowMat.setFloat("Shininess", 128f);
 	}
 
 	// -------------------------------------------------------------------------
@@ -153,7 +172,13 @@ public class GameClient extends SimpleApplication implements ClientNetworkListen
 		System.out.println("My ID: " + this.ID);
 		playfield = new ClientPlayfield(this);
 		for (FieldData fd : msg.field) {
-			playfield.addSphere(fd);
+			if(fd.id == msg.ID)
+			{
+				playerBall = playfield.addSphere(fd);
+			}else{
+				playfield.addSphere(fd);
+			}
+			
 		}
 	}
 
@@ -373,7 +398,28 @@ public class GameClient extends SimpleApplication implements ClientNetworkListen
 				int target = ((Ball)cr.getGeometry()).id;
 				System.out.println("ray collision with "+ target);
 				if(target != this.ID)
+				{
 					this.target = target;
+					
+					//remove old arrow
+					rootNode.detachChildNamed("arrowgeo");
+					
+					//determine new arrow
+					Vector3f arrowVec = cr.getGeometry()
+						.getWorldTranslation()
+						.subtract(playerBall.getWorldTranslation());
+					
+					//scale the arrow so it doesn't clip into target ball
+					arrowVec = arrowVec.mult(0.92f);
+					
+					//create and position new arrow
+					targetArrow = new Arrow(arrowVec);
+					arrowGeo = new Geometry("arrowgeo", targetArrow);
+					arrowGeo.setMaterial(arrowMat);
+					arrowGeo.setLocalTranslation(playerBall.getLocalTranslation());
+					rootNode.attachChild(arrowGeo);
+				}
+					
 				return;
 			}
 
