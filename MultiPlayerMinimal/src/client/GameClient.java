@@ -298,6 +298,7 @@ public class GameClient extends SimpleApplication implements ClientNetworkListen
                             if (b instanceof Ball && ((Ball) b).id == ncm.target) {
                                 ((Ball) b).getMaterial().setColor("Ambient", ncm.color);
                                 rootNode.updateGeometricState();
+                                new SingleBurstParticleEmitter(this, rootNode, ((Ball) b).getWorldTranslation());
                             }
                         }
                         break;
