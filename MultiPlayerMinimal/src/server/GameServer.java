@@ -38,22 +38,7 @@ public class GameServer implements ServerNetworkListener {
     // Methods required by ServerNetworkHandler
     public void messageReceived(Message msg) {
         NewClientMessage ncm = (NewClientMessage) msg;
-        switch (ncm.type) {
-            case 1: // absorb
-                networkHandler.absorbMessageSend(ncm.target, ncm.ID);
-                break;
-            case 2: // attack
-                networkHandler.attackMessageSend(ncm.target, ncm.ID);
-                break;
-            case 3: // infusion
-                networkHandler.infuseMessageSend(ncm.target, ncm.ID);
-                break;
-            case 4: // donation
-                networkHandler.donateMessageSend(ncm.target, ncm.ID);
-                break;
-            default:
-                break;
-        }
+        networkHandler.actionMessageSend(ncm.target, ncm.ID, ncm.type);
     }
     
     public Message removeConnection(int id){
@@ -73,28 +58,29 @@ public class GameServer implements ServerNetworkListener {
         NewClientMessage iniCM = new NewClientMessage(connectionID, playfield.data);
         return (iniCM);
     }
-    
-    public Message absorbMessage(int target, int thief) {
-        // implement the absorbing game logic
-        NewClientMessage absorbMsg = new NewClientMessage(thief, playfield.data, 1, target);
-        return absorbMsg;
-    }
-    
-    public Message attackMessage(int target, int thief) {
-        // implement the attacking game logic
-        NewClientMessage attackMsg = new NewClientMessage(thief, playfield.data, 2, target);
-        return attackMsg;
-    }
 
-    public Message infuseMessage(int target, int donor) {
-        // implement the attacking game logic
-        NewClientMessage infuseMsg = new NewClientMessage(donor, playfield.data, 3, target);
-        return infuseMsg;
-    }
-
-    public Message donateMessage(int target, int donor) {
-        // implement the attacking game logic
-        NewClientMessage donateMsg = new NewClientMessage(donor, playfield.data, 4, target);
-        return donateMsg;
+    public Message actionMessage(int target, int source, int type) {
+        NewClientMessage m = null;
+        switch (type) {
+            case 1: // absorb
+                System.out.println("absorb message sent");
+                m = new NewClientMessage(source, playfield.data, 1, target);
+                break;
+            case 2: // attack
+                System.out.println("attack message sent");
+                m = new NewClientMessage(source, playfield.data, 2, target);
+                break;
+            case 3: // infuse
+                System.out.println("infuse message sent");
+                m = new NewClientMessage(source, playfield.data, 3, target);
+                break;
+            case 4: // donate
+                System.out.println("donate message sent");
+                m = new NewClientMessage(source, playfield.data, 4, target);
+                break;
+            default:
+                break;
+        }
+        return m;
     }
 }

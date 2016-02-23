@@ -284,16 +284,16 @@ public class GameClient extends SimpleApplication implements ClientNetworkListen
 			}
                         break;
                     case 1: // absorb
-                        System.out.println(ncm.ID + " is Absorbing");
+                        System.out.println(ncm.ID + " is Absorbing from " + ncm.target);
                         break;
                     case 2: // attack
-                        System.out.println(ncm.ID + " is Attacking");
+                        System.out.println(ncm.ID + " is Attacking " + ncm.target);
                         break;
                     case 3: // infusion
-                        System.out.println(ncm.ID + " is Infusing");
+                        System.out.println(ncm.ID + " is Infusing with " + ncm.target);
                         break;
                     case 4: // donation
-                        System.out.println(ncm.ID + " is Donating");
+                        System.out.println(ncm.ID + " is Donating to " + ncm.target);
                         break;
                     default:
                         break;

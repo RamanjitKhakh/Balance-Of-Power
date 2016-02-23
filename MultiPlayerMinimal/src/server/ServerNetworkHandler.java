@@ -82,31 +82,8 @@ public class ServerNetworkHandler implements MessageListener, ConnectionListener
         broadcast(m);
     }
     
-    public void absorbMessageSend(int target, int thief) {
-        Message m;
-        System.out.println("absorb message send");
-        m = gameServer.absorbMessage(target, thief);
-        broadcast(m);
-    }
-    
-    public void attackMessageSend(int target, int thief) {
-        Message m;
-        System.out.println("attack message send");
-        m = gameServer.attackMessage(target, thief);
-        broadcast(m);
-    }
-    
-    public void infuseMessageSend(int target, int donor) {
-        Message m;
-        System.out.println("infuse message send");
-        m = gameServer.infuseMessage(target, donor);
-        broadcast(m);
-    }
-    
-    public void donateMessageSend(int target, int donor) {
-        Message m;
-        System.out.println("donate message send");
-        m = gameServer.donateMessage(target, donor);
+    public void actionMessageSend(int target, int source, int type) {
+        Message m = gameServer.actionMessage(target, source, type);
         broadcast(m);
     }
 }
