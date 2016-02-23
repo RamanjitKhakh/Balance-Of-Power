@@ -3,6 +3,7 @@
  */
 package server;
 
+import com.jme3.math.ColorRGBA;
 import com.jme3.network.Message;
 import messages.NewClientMessage;
 
@@ -61,22 +62,23 @@ public class GameServer implements ServerNetworkListener {
 
     public Message actionMessage(int target, int source, int type) {
         NewClientMessage m = null;
+        ColorRGBA color = null;
         switch (type) {
             case 1: // absorb
-                System.out.println("absorb message sent");
-                m = new NewClientMessage(source, playfield.data, 1, target);
+                color = playfield.absorb(target, source);
+                m = new NewClientMessage(source, playfield.data, 1, target, color);
                 break;
             case 2: // attack
-                System.out.println("attack message sent");
-                m = new NewClientMessage(source, playfield.data, 2, target);
+                color = playfield.attack(target, source);
+                m = new NewClientMessage(source, playfield.data, 2, target, color);
                 break;
             case 3: // infuse
-                System.out.println("infuse message sent");
-                m = new NewClientMessage(source, playfield.data, 3, target);
+                color = playfield.infuse(target, source);
+                m = new NewClientMessage(source, playfield.data, 3, target, color);
                 break;
             case 4: // donate
-                System.out.println("donate message sent");
-                m = new NewClientMessage(source, playfield.data, 4, target);
+                color = playfield.donate(target, source);
+                m = new NewClientMessage(source, playfield.data, 4, target, color);
                 break;
             default:
                 break;

@@ -285,15 +285,39 @@ public class GameClient extends SimpleApplication implements ClientNetworkListen
                         break;
                     case 1: // absorb
                         System.out.println(ncm.ID + " is Absorbing from " + ncm.target);
+                        for (Spatial b : rootNode.getChildren()) {
+                            if (b instanceof Ball && ((Ball) b).id == ncm.target) {
+                                ((Ball) b).getMaterial().setColor("Ambient", ncm.color);
+                                rootNode.updateGeometricState();
+                            }
+                        }
                         break;
                     case 2: // attack
                         System.out.println(ncm.ID + " is Attacking " + ncm.target);
+                        for (Spatial b : rootNode.getChildren()) {
+                            if (b instanceof Ball && ((Ball) b).id == ncm.target) {
+                                ((Ball) b).getMaterial().setColor("Ambient", ncm.color);
+                                rootNode.updateGeometricState();
+                            }
+                        }
                         break;
                     case 3: // infusion
                         System.out.println(ncm.ID + " is Infusing with " + ncm.target);
+                        for (Spatial b : rootNode.getChildren()) {
+                            if (b instanceof Ball && ((Ball) b).id == ncm.target) {
+                                ((Ball) b).getMaterial().setColor("Ambient", ncm.color);
+                                rootNode.updateGeometricState();
+                            }
+                        }
                         break;
                     case 4: // donation
                         System.out.println(ncm.ID + " is Donating to " + ncm.target);
+                        for (Spatial b : rootNode.getChildren()) {
+                            if (b instanceof Ball && ((Ball) b).id == ncm.target) {
+                                ((Ball) b).getMaterial().setColor("Ambient", ncm.color);
+                                rootNode.updateGeometricState();
+                            }
+                        }
                         break;
                     default:
                         break;

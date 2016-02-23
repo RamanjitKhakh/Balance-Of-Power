@@ -41,14 +41,50 @@ public class PlayField {
         // (TODO)
         return (true);
     }
-    
-    public void removeElement(int id){
+
+    public void removeElement(int id) {
         //data.removeFirstOccurrence(new FieldData(id, x, y, z, c));
-        for(int i = 0; i < data.size(); i++){
-            if(data.get(i).id == id){
+        for (int i = 0; i < data.size(); i++) {
+            if (data.get(i).id == id) {
                 data.remove(data.get(i));
             }
         }
         System.out.println("there are " + data.size() + " balls left from the server");
+    }
+
+    public ColorRGBA absorb(int target, int source) {
+        for (FieldData fd : data) {
+            if (fd.id == target) {
+                System.out.println("absorb message sent");
+            }
+        }
+        return ColorRGBA.randomColor();
+    }
+
+    public ColorRGBA attack(int target, int source) {
+        for (FieldData fd : data) {
+            if (fd.id == target) {
+                System.out.println("attack message sent");
+            }
+        }
+        return ColorRGBA.randomColor();
+    }
+
+    public ColorRGBA infuse(int target, int source) {
+        for (FieldData fd : data) {
+            if (fd.id == target) {
+                System.out.println("infuse message sent");
+            }
+        }
+        return ColorRGBA.randomColor();
+    }
+
+    public ColorRGBA donate(int target, int source) {
+        for (FieldData fd : data) {
+            if (fd.id == target) {
+                System.out.println("donate message sent");
+            }
+        }
+        return ColorRGBA.randomColor();
     }
 }
