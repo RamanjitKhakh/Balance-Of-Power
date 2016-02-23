@@ -1,2 +1,4 @@
 MultiPlayerMinimal/nbproject/private/private.properties
 MultiPlayerMinimal/build/classes/client/*.class
+MultiPlayerMinimal/build/classes/server/*.class
+MultiPlayerMinimal/build/classes/messages/*.class
