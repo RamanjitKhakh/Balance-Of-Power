@@ -38,6 +38,10 @@ public class GameClient extends SimpleApplication implements ClientNetworkListen
 	protected ClientNetworkHandler networkHandler;
 	private ClientPlayfield playfield;
 	private ArrayList<Ball> ballCollisionList;
+	private boolean shiftPressed = false;
+	private boolean aPressed = false;
+	private boolean sPressed = false;
+	private boolean rayLock = false;
 	
 
 	// -------------------------------------------------------------------------
@@ -154,19 +158,78 @@ public class GameClient extends SimpleApplication implements ClientNetworkListen
 	private void initKeys() {
 		inputManager.addMapping("PL_EXPLODE", new KeyTrigger(KeyInput.KEY_SPACE));
 		inputManager.addMapping("TB_MOUSELEFT", new MouseButtonTrigger(MouseInput.BUTTON_LEFT));
-		inputManager.addListener(this, new String[]{"TB_MOUSELEFT", "PL_EXPLODE"});
+		inputManager.addMapping("attack", new KeyTrigger(KeyInput.KEY_A));
+		inputManager.addMapping("infuse", new KeyTrigger(KeyInput.KEY_S));
+		inputManager.addMapping("shift", new KeyTrigger(KeyInput.KEY_LSHIFT));
+		inputManager.addListener(this, new String[]{"TB_MOUSELEFT", "PL_EXPLODE",
+			"attack","shift","infuse"});
 
 	}
 
 	// key action
 	public void onAction(String name, boolean isPressed, float tpf) {
-		
-
 		if (name.equals("TB_MOUSELEFT") && isPressed) {
-		//System.out.println("left mouse button clicked!");
-		getRayCollision();
+			//System.out.println("left mouse button clicked!");
+			getRayCollision();
+				
+			
+		}
+		
+		if(name.equals("shift"))
+		{
+			if(isPressed && !shiftPressed)
+			{
+				shiftPressed = true;
+				//System.out.println("shift pressed");
+			}else if(!isPressed && shiftPressed)
+			{
+				shiftPressed = false;
+				//System.out.println("shift released");
+			}
+			
+		}
+		
+		if(name.equals("attack") ) 
+		{
+			
+			if(!shiftPressed)
+			{
+				if(isPressed && !aPressed)
+				{
+					aPressed = true;
+					System.out.println("begin absorb");
+				}else if(!isPressed && aPressed)
+				{
+					aPressed = false;
+					System.out.println("stop absorb");
+				}
+			}else if(isPressed){
+				System.out.println("attack");
+			}
+			
+			
 		}
 
+		if(name.equals("infuse") )
+		{
+			if(!shiftPressed)
+			{
+				if(isPressed && !sPressed)
+				{
+					sPressed = true;
+					System.out.println("begin infuse");
+				}else if(!isPressed && sPressed)
+				{
+					sPressed = false;
+					System.out.println("stop infuse");
+				}
+			}else if(isPressed){
+				System.out.println("donation");
+			}
+			
+			
+		}
+		
 
 	}
 
@@ -220,7 +283,7 @@ public class GameClient extends SimpleApplication implements ClientNetworkListen
 		*/
 	}
 
-	private Vector3f getRayCollision() {
+	private void getRayCollision() {
 		Vector3f hitVector = null;
 		CollisionResults results = new CollisionResults();
 		// Convert screen click to 3d position
@@ -232,32 +295,65 @@ public class GameClient extends SimpleApplication implements ClientNetworkListen
 		
 		// Collect intersections between ray and all nodes in results list.
 		//trackBallNode.collideWith(ray, results);
+		
 		for(Spatial s: rootNode.getChildren())
 		{
 			if(s instanceof Ball)
 			{
-				if(!ballCollisionList.contains(s))
-				{
-					s.collideWith(ray, results);
-					ballCollisionList.add((Ball)s);
-				}
+				
+				s.collideWith(ray, results);
+				ballCollisionList.add((Ball)s);
+
 				
 			}
 				
 		}
 		
+		
 		// (Print the results so we see what is going on:)
 		float minDist = Float.MAX_VALUE;
 		
+//		CollisionResult cr = results.getClosestCollision();
+//		
+//		if(cr != null)
+//		{
+//			Vector3f pt = cr.getContactPoint();
+//			if(cr.getGeometry() instanceof Ball)
+//			{
+//				int target = ((Ball)cr.getGeometry()).id;
+//				System.out.println("ray collision with "+ target);
+//			}
+//
+//			ballCollisionList.clear();
+//			//return (hitVector);
+//		}
+		
 		CollisionResult cr = results.getClosestCollision();
-		Vector3f pt = cr.getContactPoint();
-		if(cr.getGeometry() instanceof Ball)
+		
+		for(int i = 0 ; i < results.size(); i++)
 		{
-			int target = ((Ball)cr.getGeometry()).id;
-			System.out.println("ray collision with "+ target);
+			cr = results.getCollision(i);
+			
+			Vector3f pt = cr.getContactPoint();
+			if(cr.getGeometry() instanceof Ball)
+			{
+				int target = ((Ball)cr.getGeometry()).id;
+				System.out.println("ray collision with "+ target);
+				return;
+			}
+
+			
+			//return (hitVector);
 		}
 		
-		ballCollisionList.clear();
-		return (hitVector);
+		
+		
+
+		
+		
+		
+		
+		
+		
 	}
 }
