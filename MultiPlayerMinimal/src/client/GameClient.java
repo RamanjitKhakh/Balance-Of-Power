@@ -326,33 +326,15 @@ public class GameClient extends SimpleApplication implements ClientNetworkListen
 		{
 			if(s instanceof Ball)
 			{
-				
 				s.collideWith(ray, results);
 				ballCollisionList.add((Ball)s);
 
-				
 			}
 				
 		}
 		
-		
 		// (Print the results so we see what is going on:)
 		float minDist = Float.MAX_VALUE;
-		
-//		CollisionResult cr = results.getClosestCollision();
-//		
-//		if(cr != null)
-//		{
-//			Vector3f pt = cr.getContactPoint();
-//			if(cr.getGeometry() instanceof Ball)
-//			{
-//				int target = ((Ball)cr.getGeometry()).id;
-//				System.out.println("ray collision with "+ target);
-//			}
-//
-//			ballCollisionList.clear();
-//			//return (hitVector);
-//		}
 		
 		CollisionResult cr = results.getClosestCollision();
 		
@@ -365,22 +347,12 @@ public class GameClient extends SimpleApplication implements ClientNetworkListen
 			{
 				int target = ((Ball)cr.getGeometry()).id;
 				System.out.println("ray collision with "+ target);
-                                this.target = target;
+				if(target != this.ID)
+					this.target = target;
 				return;
 			}
 
-			
-			//return (hitVector);
 		}
-		
-		
-		
-
-		
-		
-		
-		
-		
 		
 	}
 }
