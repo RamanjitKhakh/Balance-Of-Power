@@ -14,7 +14,7 @@ import java.util.Random;
  */
 public class PlayField {
 
-    public final static float MINMAX = 10f;
+    public final static float MINMAX = 1f;
     public final static float RADIUS = 1f;
     public LinkedList<FieldData> data;
 
