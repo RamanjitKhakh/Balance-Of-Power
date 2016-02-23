@@ -34,7 +34,7 @@ public class ServerNetworkHandler implements MessageListener, ConnectionListener
 
     // -------------------------------------------------------------------------
     public void messageReceived(Object source, Message msg) {
-        System.out.println("Received: " + msg);
+        System.out.println("ServerNetworkHandler Received: " + msg);
         gameServer.messageReceived(msg);
     }
 
@@ -79,6 +79,34 @@ public class ServerNetworkHandler implements MessageListener, ConnectionListener
         Message m;
         System.out.println("Ayy lmao");
         m = gameServer.removeConnection(connID);
+        broadcast(m);
+    }
+    
+    public void absorbMessageSend(int target, int thief) {
+        Message m;
+        System.out.println("absorb message send");
+        m = gameServer.absorbMessage(target, thief);
+        broadcast(m);
+    }
+    
+    public void attackMessageSend(int target, int thief) {
+        Message m;
+        System.out.println("attack message send");
+        m = gameServer.attackMessage(target, thief);
+        broadcast(m);
+    }
+    
+    public void infuseMessageSend(int target, int donor) {
+        Message m;
+        System.out.println("infuse message send");
+        m = gameServer.infuseMessage(target, donor);
+        broadcast(m);
+    }
+    
+    public void donateMessageSend(int target, int donor) {
+        Message m;
+        System.out.println("donate message send");
+        m = gameServer.donateMessage(target, donor);
         broadcast(m);
     }
 }

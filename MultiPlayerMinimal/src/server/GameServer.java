@@ -37,7 +37,23 @@ public class GameServer implements ServerNetworkListener {
     // -------------------------------------------------------------------------
     // Methods required by ServerNetworkHandler
     public void messageReceived(Message msg) {
-
+        NewClientMessage ncm = (NewClientMessage) msg;
+        switch (ncm.type) {
+            case 1: // absorb
+                networkHandler.absorbMessageSend(ncm.target, ncm.ID);
+                break;
+            case 2: // attack
+                networkHandler.attackMessageSend(ncm.target, ncm.ID);
+                break;
+            case 3: // infusion
+                networkHandler.infuseMessageSend(ncm.target, ncm.ID);
+                break;
+            case 4: // donation
+                networkHandler.donateMessageSend(ncm.target, ncm.ID);
+                break;
+            default:
+                break;
+        }
     }
     
     public Message removeConnection(int id){
@@ -56,5 +72,29 @@ public class GameServer implements ServerNetworkListener {
         // send entire playfield to new client
         NewClientMessage iniCM = new NewClientMessage(connectionID, playfield.data);
         return (iniCM);
+    }
+    
+    public Message absorbMessage(int target, int thief) {
+        // implement the absorbing game logic
+        NewClientMessage absorbMsg = new NewClientMessage(thief, playfield.data, 1, target);
+        return absorbMsg;
+    }
+    
+    public Message attackMessage(int target, int thief) {
+        // implement the attacking game logic
+        NewClientMessage attackMsg = new NewClientMessage(thief, playfield.data, 2, target);
+        return attackMsg;
+    }
+
+    public Message infuseMessage(int target, int donor) {
+        // implement the attacking game logic
+        NewClientMessage infuseMsg = new NewClientMessage(donor, playfield.data, 3, target);
+        return infuseMsg;
+    }
+
+    public Message donateMessage(int target, int donor) {
+        // implement the attacking game logic
+        NewClientMessage donateMsg = new NewClientMessage(donor, playfield.data, 4, target);
+        return donateMsg;
     }
 }

@@ -27,6 +27,7 @@ import com.jme3.util.SkyFactory;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import messages.NewClientMessage;
 import server.FieldData;
@@ -42,6 +43,9 @@ public class GameClient extends SimpleApplication implements ClientNetworkListen
 	private boolean aPressed = false;
 	private boolean sPressed = false;
 	private boolean rayLock = false;
+        // need this when sending message to server (I think)
+        private LinkedList<FieldData> currentPlayField;
+        private int target; // ID of the target of each action
 	
 
 	// -------------------------------------------------------------------------
@@ -198,6 +202,7 @@ public class GameClient extends SimpleApplication implements ClientNetworkListen
 				{
 					aPressed = true;
 					System.out.println("begin absorb");
+                                        networkHandler.send(new NewClientMessage(ID, currentPlayField, 1, this.target));
 				}else if(!isPressed && aPressed)
 				{
 					aPressed = false;
@@ -205,6 +210,7 @@ public class GameClient extends SimpleApplication implements ClientNetworkListen
 				}
 			}else if(isPressed){
 				System.out.println("attack");
+                                networkHandler.send(new NewClientMessage(ID, currentPlayField, 2, this.target));
 			}
 			
 			
@@ -218,6 +224,7 @@ public class GameClient extends SimpleApplication implements ClientNetworkListen
 				{
 					sPressed = true;
 					System.out.println("begin infuse");
+                                        networkHandler.send(new NewClientMessage(ID, currentPlayField, 3, this.target));
 				}else if(!isPressed && sPressed)
 				{
 					sPressed = false;
@@ -225,6 +232,7 @@ public class GameClient extends SimpleApplication implements ClientNetworkListen
 				}
 			}else if(isPressed){
 				System.out.println("donation");
+                                networkHandler.send(new NewClientMessage(ID, currentPlayField, 4, this.target));
 			}
 			
 			
@@ -236,8 +244,11 @@ public class GameClient extends SimpleApplication implements ClientNetworkListen
 	// -------------------------------------------------------------------------
 	// message received
 	public void messageReceived(Message msg) {
-		if (msg instanceof NewClientMessage) {
-			NewClientMessage ncm = (NewClientMessage) msg;
+            NewClientMessage ncm = (NewClientMessage) msg;
+            currentPlayField = ncm.field;
+            // since all messages are of type NewClientMessage, need to use 'type' variable for conditional instead
+		switch (((NewClientMessage)msg).type) {
+                    case 0: // new client connection or removal of client
 			if (this.ID == -1) {
 				initGame(ncm);
 			} else {
@@ -271,6 +282,21 @@ public class GameClient extends SimpleApplication implements ClientNetworkListen
                             
                             
 			}
+                        break;
+                    case 1: // absorb
+                        System.out.println(ncm.ID + " is Absorbing");
+                        break;
+                    case 2: // attack
+                        System.out.println(ncm.ID + " is Attacking");
+                        break;
+                    case 3: // infusion
+                        System.out.println(ncm.ID + " is Infusing");
+                        break;
+                    case 4: // donation
+                        System.out.println(ncm.ID + " is Donating");
+                        break;
+                    default:
+                        break;
 		}
 	}
 
@@ -339,6 +365,7 @@ public class GameClient extends SimpleApplication implements ClientNetworkListen
 			{
 				int target = ((Ball)cr.getGeometry()).id;
 				System.out.println("ray collision with "+ target);
+                                this.target = target;
 				return;
 			}
 
