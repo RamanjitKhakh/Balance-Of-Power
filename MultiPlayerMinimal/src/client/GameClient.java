@@ -57,7 +57,7 @@ public class GameClient extends SimpleApplication implements ClientNetworkListen
 	Geometry arrowGeo;
 	Material arrowMat;  //Material for arrow
 	Ball playerBall;    //The ball object of this client's player
-	
+	BitmapText health;
 	
 
 	// -------------------------------------------------------------------------
@@ -120,7 +120,7 @@ public class GameClient extends SimpleApplication implements ClientNetworkListen
         
         // ------------------------------------------------------------------------
         private void initHUD(){
-           BitmapText health;
+           
            BitmapFont bmf = this.getAssetManager().loadFont("Interface/Fonts/ArialBlack.fnt");
            health = new BitmapText(bmf);
           
@@ -374,19 +374,24 @@ public class GameClient extends SimpleApplication implements ClientNetworkListen
                         int damage = 0;
                         System.out.println(ncm.ID + " is Attacking " + ncm.target);
                         for (Spatial b : rootNode.getChildren()) {
-                            if (b instanceof Ball && ((Ball) b).id == ncm.ID) {
+                            if (b instanceof Ball && ((Ball) b).id == ncm.target) {
                                 new SingleBurstParticleEmitter(this, rootNode, ((Ball) b).getWorldTranslation());
                             }
                         }
                         
-                        if(ncm.target == this.ID){
+                        //if(ncm.target == this.ID){
                             for(FieldData fd: ncm.field){
-                                System.out.println("you were attacked!! " + fd.hp + " hp left!!!");
-                                int indexOf = ncm.field.indexOf(fd);
-                                System.out.println("the client playfield has " + currentPlayField.get(indexOf).hp );
+                                if(this.ID == fd.id){
+                                    System.out.println("you were attacked!! " + fd.hp + " hp left!!!");
+                                    //int indexOf = ncm.field.indexOf(fd);
+                                    //System.out.println("the client playfield has " + currentPlayField.get(indexOf).hp );
+                                    health.setText("Your Health is " + fd.hp);
+                                    
+                                }
                             }
                             //System.out.println("You were attacked!! " + playerBall.hp + " and " + ncm.ID);
-                        }
+                            //if(this.ID == fd.id)
+                       //}
                         
                         break;
                     case 3: // infusion
