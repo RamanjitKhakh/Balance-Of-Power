@@ -368,9 +368,7 @@ public class GameClient extends SimpleApplication implements ClientNetworkListen
                                 rootNode.updateGeometricState();
                             }
                         }
-                        if(ncm.target == playerBall.id){
-                            //System.out.println("You were attacked!! " + playerBall.hp + " and " + ncm.ID);
-                        }
+                        
                         break;
                     case 2: // attack
                         System.out.println(ncm.ID + " is Attacking " + ncm.target);
@@ -381,6 +379,16 @@ public class GameClient extends SimpleApplication implements ClientNetworkListen
                                 new SingleBurstParticleEmitter(this, rootNode, ((Ball) b).getWorldTranslation());
                             }
                         }
+                        
+                        if(ncm.target == this.ID){
+                            for(FieldData fd: ncm.field){
+                                System.out.println("you were attacked!! " + fd.hp + " hp left!!!");
+                                int indexOf = ncm.field.indexOf(fd);
+                                System.out.println("the client playfield has " + currentPlayField.get(indexOf).hp );
+                            }
+                            //System.out.println("You were attacked!! " + playerBall.hp + " and " + ncm.ID);
+                        }
+                        
                         break;
                     case 3: // infusion
                         System.out.println(ncm.ID + " is Infusing with " + ncm.target);
