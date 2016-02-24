@@ -146,7 +146,7 @@ public class GameClient extends SimpleApplication implements ClientNetworkListen
 		return (aps);
 	}
 
-	// -------------------------------------------------------------------------
+	// ---------------------AA----------------------------------------------------
 	private void initGui() {
 		setDisplayFps(true);
 		setDisplayStatView(false);
@@ -161,7 +161,8 @@ public class GameClient extends SimpleApplication implements ClientNetworkListen
           
            health.setSize(bmf.getCharSet().getRenderedSize() * 1f);
            health.setColor(ColorRGBA.White);
-           //currentPlayField.get(playerBall.id);
+           
+	   //currentPlayField.get(playerBall.id);
            for(FieldData fd: currentPlayField){
                if(fd.id == this.ID){
                    health.setText("Your Health is " + fd.hp);
@@ -546,7 +547,8 @@ public class GameClient extends SimpleApplication implements ClientNetworkListen
 						.subtract(playerBall.getWorldTranslation());
 					
 					//scale the arrow so it doesn't clip into target ball
-					arrowVec = arrowVec.mult(0.92f);
+					float newLen = (arrowVec.length() - 1)/arrowVec.length();
+					arrowVec = arrowVec.mult(newLen);
 					
 					//create and position new arrow
 					targetArrow = new Arrow(arrowVec);
