@@ -47,7 +47,7 @@ public class SingleBurstParticleEmitter extends AbstractControl {
     }
 
     private void init() {
-        emitter = new ParticleEmitter("Debris", ParticleMesh.Type.Triangle, 300);
+        emitter = new ParticleEmitter("Debris", ParticleMesh.Type.Triangle, 100);
         Material debris_mat = new Material(sa.getAssetManager(), "Common/MatDefs/Misc/Particle.j3md");
         if (attacking) {
             debris_mat.setTexture("Texture", sa.getAssetManager().loadTexture("Effects/Explosion/Debris.png"));

@@ -65,8 +65,10 @@ public class GameClient extends SimpleApplication implements ClientNetworkListen
 	Material arrowMat;  //Material for arrow
 	Ball playerBall;    //The ball object of this client's player
 	BitmapText health;
-	
-
+	boolean ShotsFired = false;
+        boolean blast = true;
+        Vector3f HitLocation;
+        
 	// -------------------------------------------------------------------------
 	public static void main(String[] args) {
 		System.out.println("Starting Client");
@@ -105,7 +107,11 @@ public class GameClient extends SimpleApplication implements ClientNetworkListen
 	// -------------------------------------------------------------------------
 	@Override
 	public void simpleUpdate(float tpf) {
-		
+		if(ShotsFired){
+                    ShotsFired = false;
+                    //new SingleBurstParticleEmitter(this, rootNode, ((Ball) b).getWorldTranslation(), true);
+                    new SingleBurstParticleEmitter(this, rootNode, HitLocation, blast);
+                }
 		
 		if(isAbsorbing)
 		{
@@ -419,7 +425,10 @@ public class GameClient extends SimpleApplication implements ClientNetworkListen
                         System.out.println(ncm.ID + " is Attacking " + ncm.target);
                         for (Spatial b : rootNode.getChildren()) {
                             if (b instanceof Ball && ((Ball) b).id == ncm.target) {
-                                new SingleBurstParticleEmitter(this, rootNode, ((Ball) b).getWorldTranslation(), true);
+                                HitLocation = ((Ball) b).getWorldTranslation();
+                                ShotsFired = true;
+                                blast = true;
+                                
                             }
                         }
                         
@@ -441,7 +450,9 @@ public class GameClient extends SimpleApplication implements ClientNetworkListen
                         System.out.println(ncm.ID + " is Donating to " + ncm.target);
                         for (Spatial b : rootNode.getChildren()) {
                             if (b instanceof Ball && ((Ball) b).id == ncm.target) {
-                                new SingleBurstParticleEmitter(this, rootNode, ((Ball) b).getWorldTranslation(), false);
+                                HitLocation = ((Ball) b).getWorldTranslation();
+                                ShotsFired = true;
+                                blast = false;
                             }
                         }
                         break;
@@ -474,15 +485,14 @@ public class GameClient extends SimpleApplication implements ClientNetworkListen
 		}
                 System.out.println(ncm.target);
                 if(ncm.target != -1){
-                    for(FieldData fd: ncm.field){
-                               if(this.ID == fd.id){
-                                   //System.out.println("you were attacked!! " + fd.hp + " hp left!!!");
-                                   //int indexOf = ncm.field.indexOf(fd);
-                                   //System.out.println("the client playfield has " + currentPlayField.get(indexOf).hp );
-                                   health.setText("Your Health is " + fd.hp);
+                    if((this.ID == ncm.target) || (this.ID == ncm.ID) ){
+                        for(FieldData fd: ncm.field){
+                            if(this.ID == fd.id){
+                                health.setText("Your Health is " + fd.hp);
 
-                               }
-                    }
+                            }
+                        }
+                    } 
                 }
                 
 	}
