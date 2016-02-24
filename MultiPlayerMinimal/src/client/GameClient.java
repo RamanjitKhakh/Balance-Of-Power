@@ -50,6 +50,13 @@ public class GameClient extends SimpleApplication implements ClientNetworkListen
 	private boolean aPressed = false;
 	private boolean sPressed = false;
 	private boolean rayLock = false;
+	private boolean isAbsorbing = false;
+	private boolean isInfusing = false;
+	
+	//controls how often an action is sent to the server
+	private static float ACTION_INTERVAL = 0.5f;
+	private float actionTimer = 0;
+	
         // need this when sending message to server (I think)
         private LinkedList<FieldData> currentPlayField;
         private int target; // ID of the target of each action
@@ -96,7 +103,39 @@ public class GameClient extends SimpleApplication implements ClientNetworkListen
 	}
 
 	// -------------------------------------------------------------------------
-	public void SimpleUpdate(float tpf) {
+	@Override
+	public void simpleUpdate(float tpf) {
+		
+		
+		if(isAbsorbing)
+		{
+			actionTimer+=tpf;
+		//System.out.println("actionTimer: " + actionTimer);
+			if(actionTimer >= ACTION_INTERVAL)
+			{
+				System.out.println("client sending absorb damage message");
+				actionTimer=0;
+				networkHandler.send(new NewClientMessage(ID,
+						currentPlayField,
+						NewClientMessage.MSG_ABSORB_DMG,
+						this.target));
+			}
+		}
+		
+		if(isInfusing)
+		{
+			actionTimer+=tpf;
+		//System.out.println("actionTimer: " + actionTimer);
+			if(actionTimer >= ACTION_INTERVAL)
+			{
+				System.out.println("client sending infuse message");
+				actionTimer=0;
+				networkHandler.send(new NewClientMessage(ID,
+						currentPlayField,
+						NewClientMessage.MSG_INFUSE_ADD,
+						this.target));
+			}
+		}
 	}
 
 	// -------------------------------------------------------------------------
@@ -247,6 +286,8 @@ public class GameClient extends SimpleApplication implements ClientNetworkListen
 				{
 					aPressed = true;
 					System.out.println("begin absorb");
+					actionTimer = 0;
+					isAbsorbing = true;
                                         networkHandler.send(new NewClientMessage(ID,
 						currentPlayField,
 						NewClientMessage.MSG_BEGIN_ABSORB,
@@ -255,6 +296,8 @@ public class GameClient extends SimpleApplication implements ClientNetworkListen
 				{
 					aPressed = false;
 					System.out.println("stop absorb");
+					actionTimer = 0;
+					isAbsorbing = false;
 					networkHandler.send(new NewClientMessage(ID,
 						currentPlayField,
 						NewClientMessage.MSG_END_ABSORB,
@@ -279,6 +322,8 @@ public class GameClient extends SimpleApplication implements ClientNetworkListen
 				{
 					sPressed = true;
 					System.out.println("begin infuse");
+					actionTimer = 0;
+					isInfusing = true;
                                         networkHandler.send(new NewClientMessage(ID,
 						currentPlayField,
 						NewClientMessage.MSG_BEGIN_INFUSE,
@@ -287,6 +332,8 @@ public class GameClient extends SimpleApplication implements ClientNetworkListen
 				{
 					sPressed = false;
 					System.out.println("stop infuse");
+					actionTimer = 0;
+					isInfusing = false;
 					networkHandler.send(new NewClientMessage(ID,
 						currentPlayField,
 						NewClientMessage.MSG_END_INFUSE,
@@ -409,6 +456,12 @@ public class GameClient extends SimpleApplication implements ClientNetworkListen
                             }
                         }
                         break;
+		    case 7:
+			    System.out.println(ncm.ID + " has absorbed from " + ncm.target );
+			break;
+		    case 8:
+			    System.out.println(ncm.ID + " has infused to " + ncm.target );
+			break;
                     default:
                         break;
 		}

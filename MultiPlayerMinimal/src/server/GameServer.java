@@ -74,15 +74,15 @@ public class GameServer implements ServerNetworkListener {
         ColorRGBA color = null;
         switch (type) {
             case 1: // start absorb
-                color = playfield.absorb(target, source);
+                color = ColorRGBA.randomColor();
                 m = new NewClientMessage(source, playfield.data, 1, target, color);
                 break;
             case 2: // attack
                 color = playfield.attack(target, source);
                 m = new NewClientMessage(source, playfield.data, 2, target, color);
                 break;
-            case 3: // infuse
-                color = playfield.infuse(target, source);
+            case 3: // start infuse
+		color = ColorRGBA.randomColor();    
                 m = new NewClientMessage(source, playfield.data, 3, target, color);
                 break;
             case 4: // donate
@@ -90,13 +90,19 @@ public class GameServer implements ServerNetworkListener {
                 m = new NewClientMessage(source, playfield.data, 4, target, color);
                 break;
 	    case 5: // end absorb
-                color = playfield.donate(target, source);
                 m = new NewClientMessage(source, playfield.data, 5, target, color);
                 break;
 	    case 6: // end infuse
-                color = playfield.donate(target, source);
                 m = new NewClientMessage(source, playfield.data, 6, target, color);
                 break;
+	    case 7: //absorb damage
+		color = playfield.absorb(target, source);
+		m = new NewClientMessage(source, playfield.data, 7, target, color);
+		break;
+	    case 8: //infusion damage
+		color = playfield.infuse(target, source);
+		m = new NewClientMessage(source, playfield.data, 8, target, color);
+		break;
             default:
                 break;
         }

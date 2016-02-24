@@ -55,7 +55,7 @@ public class PlayField {
     public ColorRGBA absorb(int target, int source) {
         for (FieldData fd : data) {
             if (fd.id == target) {
-                System.out.println("absorb message sent");
+                
             }
         }
         return ColorRGBA.randomColor();
@@ -80,6 +80,16 @@ public class PlayField {
     }
 
     public ColorRGBA donate(int target, int source) {
+        for (FieldData fd : data) {
+            if (fd.id == target) {
+                System.out.println("donate message sent");
+            }
+        }
+        return ColorRGBA.randomColor();
+    }
+    
+   
+    public ColorRGBA donateAdd(int target, int source) {
         for (FieldData fd : data) {
             if (fd.id == target) {
                 System.out.println("donate message sent");

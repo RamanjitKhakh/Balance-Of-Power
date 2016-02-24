@@ -21,6 +21,8 @@ public class NewClientMessage extends AbstractMessage {
     public static final int MSG_DONATION = 4;
     public static final int MSG_END_ABSORB = 5;
     public static final int MSG_END_INFUSE = 6;
+    public static final int MSG_ABSORB_DMG = 7;
+    public static final int MSG_INFUSE_ADD = 8;
     // -------------------------------------------------------------------------
     public NewClientMessage() {
     }
