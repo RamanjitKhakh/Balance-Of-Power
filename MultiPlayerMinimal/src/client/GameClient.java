@@ -379,19 +379,17 @@ public class GameClient extends SimpleApplication implements ClientNetworkListen
                             }
                         }
                         
-                        //if(ncm.target == this.ID){
-                            for(FieldData fd: ncm.field){
-                                if(this.ID == fd.id){
-                                    System.out.println("you were attacked!! " + fd.hp + " hp left!!!");
-                                    //int indexOf = ncm.field.indexOf(fd);
-                                    //System.out.println("the client playfield has " + currentPlayField.get(indexOf).hp );
-                                    health.setText("Your Health is " + fd.hp);
-                                    
-                                }
+                        
+                        for(FieldData fd: ncm.field){
+                            if(this.ID == fd.id){
+                                //System.out.println("you were attacked!! " + fd.hp + " hp left!!!");
+                                //int indexOf = ncm.field.indexOf(fd);
+                                //System.out.println("the client playfield has " + currentPlayField.get(indexOf).hp );
+                                health.setText("Your Health is " + fd.hp);
+
                             }
-                            //System.out.println("You were attacked!! " + playerBall.hp + " and " + ncm.ID);
-                            //if(this.ID == fd.id)
-                       //}
+                        }
+
                         
                         break;
                     case 3: // infusion
