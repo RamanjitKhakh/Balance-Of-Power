@@ -375,17 +375,6 @@ public class GameClient extends SimpleApplication implements ClientNetworkListen
                     case 2: // attack
                         int damage = 0;
                         System.out.println(ncm.ID + " is Attacking " + ncm.target);
-                        for (FieldData fd : ncm.field) {
-                            if (fd.id == ID) {
-                                damage = fd.hp / 2;
-                                fd.hp /= 2;
-                            }
-                        }
-                        for (FieldData fd : ncm.field) {
-                            if (fd.id == target) {
-                                fd.hp -= damage;
-                            }
-                        }
                         for (Spatial b : rootNode.getChildren()) {
                             if (b instanceof Ball && ((Ball) b).id == ncm.ID) {
                                 new SingleBurstParticleEmitter(this, rootNode, ((Ball) b).getWorldTranslation());
