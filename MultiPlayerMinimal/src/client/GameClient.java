@@ -64,7 +64,7 @@ public class GameClient extends SimpleApplication implements ClientNetworkListen
 	Geometry arrowGeo;
 	Material arrowMat;  //Material for arrow
 	Ball playerBall;    //The ball object of this client's player
-	
+	BitmapText health;
 	
 
 	// -------------------------------------------------------------------------
@@ -159,13 +159,19 @@ public class GameClient extends SimpleApplication implements ClientNetworkListen
         
         // ------------------------------------------------------------------------
         private void initHUD(){
-           BitmapText health;
+           
            BitmapFont bmf = this.getAssetManager().loadFont("Interface/Fonts/ArialBlack.fnt");
            health = new BitmapText(bmf);
           
            health.setSize(bmf.getCharSet().getRenderedSize() * 1f);
            health.setColor(ColorRGBA.White);
-           health.setText("Your Health is " + playerBall.hp);
+           //currentPlayField.get(playerBall.id);
+           for(FieldData fd: currentPlayField){
+               if(fd.id == this.ID){
+                   health.setText("Your Health is " + fd.hp);
+               }
+           }
+           
            
            float lineY = settings.getHeight() - health.getLineHeight();
            float lineX = 0;
@@ -409,16 +415,29 @@ public class GameClient extends SimpleApplication implements ClientNetworkListen
                                 rootNode.updateGeometricState();
                             }
                         }
+                        
                         break;
                     case 2: // attack
+                        int damage = 0;
                         System.out.println(ncm.ID + " is Attacking " + ncm.target);
                         for (Spatial b : rootNode.getChildren()) {
                             if (b instanceof Ball && ((Ball) b).id == ncm.target) {
-                                ((Ball) b).getMaterial().setColor("Ambient", ncm.color);
-                                rootNode.updateGeometricState();
-                                new SingleBurstParticleEmitter(this, rootNode, ((Ball) b).getWorldTranslation());
+                                new SingleBurstParticleEmitter(this, rootNode, ((Ball) b).getWorldTranslation(), true);
                             }
                         }
+                        
+                        
+                        for(FieldData fd: ncm.field){
+                            if(this.ID == fd.id){
+                                //System.out.println("you were attacked!! " + fd.hp + " hp left!!!");
+                                //int indexOf = ncm.field.indexOf(fd);
+                                //System.out.println("the client playfield has " + currentPlayField.get(indexOf).hp );
+                                health.setText("Your Health is " + fd.hp);
+
+                            }
+                        }
+
+                        
                         break;
                     case 3: // infusion
                         System.out.println(ncm.ID + " is Infusing with " + ncm.target);
@@ -433,8 +452,7 @@ public class GameClient extends SimpleApplication implements ClientNetworkListen
                         System.out.println(ncm.ID + " is Donating to " + ncm.target);
                         for (Spatial b : rootNode.getChildren()) {
                             if (b instanceof Ball && ((Ball) b).id == ncm.target) {
-                                ((Ball) b).getMaterial().setColor("Ambient", ncm.color);
-                                rootNode.updateGeometricState();
+                                new SingleBurstParticleEmitter(this, rootNode, ((Ball) b).getWorldTranslation(), false);
                             }
                         }
                         break;
