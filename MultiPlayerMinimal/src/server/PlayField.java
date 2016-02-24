@@ -87,9 +87,16 @@ public class PlayField {
     }
 
     public ColorRGBA donate(int target, int source) {
+        int boost = 0;
+        for (FieldData fd : data) {
+            if (fd.id == source) {
+                boost = fd.hp / 2;
+                fd.hp /= 2;
+            }
+        }
         for (FieldData fd : data) {
             if (fd.id == target) {
-                System.out.println("donate message sent");
+                fd.hp += boost;
             }
         }
         return ColorRGBA.randomColor();

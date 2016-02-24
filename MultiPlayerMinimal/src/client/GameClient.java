@@ -376,8 +376,8 @@ public class GameClient extends SimpleApplication implements ClientNetworkListen
                         int damage = 0;
                         System.out.println(ncm.ID + " is Attacking " + ncm.target);
                         for (Spatial b : rootNode.getChildren()) {
-                            if (b instanceof Ball && ((Ball) b).id == ncm.ID) {
-                                new SingleBurstParticleEmitter(this, rootNode, ((Ball) b).getWorldTranslation());
+                            if (b instanceof Ball && ((Ball) b).id == ncm.target) {
+                                new SingleBurstParticleEmitter(this, rootNode, ((Ball) b).getWorldTranslation(), true);
                             }
                         }
                         break;
@@ -394,8 +394,7 @@ public class GameClient extends SimpleApplication implements ClientNetworkListen
                         System.out.println(ncm.ID + " is Donating to " + ncm.target);
                         for (Spatial b : rootNode.getChildren()) {
                             if (b instanceof Ball && ((Ball) b).id == ncm.target) {
-                                ((Ball) b).getMaterial().setColor("Ambient", ncm.color);
-                                rootNode.updateGeometricState();
+                                new SingleBurstParticleEmitter(this, rootNode, ((Ball) b).getWorldTranslation(), false);
                             }
                         }
                         break;
