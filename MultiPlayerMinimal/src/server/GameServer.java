@@ -90,9 +90,11 @@ public class GameServer implements ServerNetworkListener {
                 m = new NewClientMessage(source, playfield.data, 4, target, color);
                 break;
 	    case 5: // end absorb
+		color = ColorRGBA.randomColor();    
                 m = new NewClientMessage(source, playfield.data, 5, target, color);
                 break;
 	    case 6: // end infuse
+		color = ColorRGBA.randomColor();    
                 m = new NewClientMessage(source, playfield.data, 6, target, color);
                 break;
 	    case 7: //absorb damage
