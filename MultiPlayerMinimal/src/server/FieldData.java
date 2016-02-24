@@ -15,9 +15,17 @@ import com.jme3.network.serializing.Serializable;
 @Serializable
 public class FieldData {
 
+    public static int IDLE = 0;
+    public static int INFUSING = 1;
+    public static int BEING_INFUSED = 2;
+    public static int ABSORBING = 3;
+    public static int BEING_ABOSRBED = 4;
+    public static int DEAD = 5;
+	
     public int id;
     public float x, y, z;
     public ColorRGBA color;
+    public int state;
 
     public FieldData() {
     }
@@ -27,6 +35,7 @@ public class FieldData {
         this.x = x;
         this.y = y;
         this.z = z;
+	this.state = IDLE;
         this.color = c;
     }
 }

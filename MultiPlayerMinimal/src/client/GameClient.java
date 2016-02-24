@@ -247,15 +247,25 @@ public class GameClient extends SimpleApplication implements ClientNetworkListen
 				{
 					aPressed = true;
 					System.out.println("begin absorb");
-                                        networkHandler.send(new NewClientMessage(ID, currentPlayField, 1, this.target));
+                                        networkHandler.send(new NewClientMessage(ID,
+						currentPlayField,
+						NewClientMessage.MSG_BEGIN_ABSORB,
+						this.target));
 				}else if(!isPressed && aPressed)
 				{
 					aPressed = false;
 					System.out.println("stop absorb");
+					networkHandler.send(new NewClientMessage(ID,
+						currentPlayField,
+						NewClientMessage.MSG_END_ABSORB,
+						this.target));
 				}
 			}else if(isPressed){
 				System.out.println("attack");
-                                networkHandler.send(new NewClientMessage(ID, currentPlayField, 2, this.target));
+                                networkHandler.send(new NewClientMessage(ID,
+					currentPlayField,
+					NewClientMessage.MSG_ATTACK,
+					this.target));
 			}
 			
 			
@@ -269,15 +279,26 @@ public class GameClient extends SimpleApplication implements ClientNetworkListen
 				{
 					sPressed = true;
 					System.out.println("begin infuse");
-                                        networkHandler.send(new NewClientMessage(ID, currentPlayField, 3, this.target));
+                                        networkHandler.send(new NewClientMessage(ID,
+						currentPlayField,
+						NewClientMessage.MSG_BEGIN_INFUSE,
+						this.target));
 				}else if(!isPressed && sPressed)
 				{
 					sPressed = false;
 					System.out.println("stop infuse");
+					networkHandler.send(new NewClientMessage(ID,
+						currentPlayField,
+						NewClientMessage.MSG_END_INFUSE,
+						this.target));
+					
 				}
 			}else if(isPressed){
 				System.out.println("donation");
-                                networkHandler.send(new NewClientMessage(ID, currentPlayField, 4, this.target));
+                                networkHandler.send(new NewClientMessage(ID,
+					currentPlayField,
+					NewClientMessage.MSG_DONATION,
+					this.target));
 			}
 			
 			
@@ -363,6 +384,24 @@ public class GameClient extends SimpleApplication implements ClientNetworkListen
                         break;
                     case 4: // donation
                         System.out.println(ncm.ID + " is Donating to " + ncm.target);
+                        for (Spatial b : rootNode.getChildren()) {
+                            if (b instanceof Ball && ((Ball) b).id == ncm.target) {
+                                ((Ball) b).getMaterial().setColor("Ambient", ncm.color);
+                                rootNode.updateGeometricState();
+                            }
+                        }
+                        break;
+		    case 5: // end absorb
+                        System.out.println(ncm.ID + " has stopped absorbing " + ncm.target);
+                        for (Spatial b : rootNode.getChildren()) {
+                            if (b instanceof Ball && ((Ball) b).id == ncm.target) {
+                                ((Ball) b).getMaterial().setColor("Ambient", ncm.color);
+                                rootNode.updateGeometricState();
+                            }
+                        }
+                        break;
+		    case 6: // end infuse
+                        System.out.println(ncm.ID + " has stopped infusing " + ncm.target);
                         for (Spatial b : rootNode.getChildren()) {
                             if (b instanceof Ball && ((Ball) b).id == ncm.target) {
                                 ((Ball) b).getMaterial().setColor("Ambient", ncm.color);

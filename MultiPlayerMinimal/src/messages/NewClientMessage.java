@@ -14,7 +14,13 @@ public class NewClientMessage extends AbstractMessage {
     public int type;
     public int target;
     public ColorRGBA color;
-
+    
+    public static final int MSG_BEGIN_ABSORB = 1;
+    public static final int MSG_ATTACK = 2;
+    public static final int MSG_BEGIN_INFUSE = 3;
+    public static final int MSG_DONATION = 4;
+    public static final int MSG_END_ABSORB = 5;
+    public static final int MSG_END_INFUSE = 6;
     // -------------------------------------------------------------------------
     public NewClientMessage() {
     }

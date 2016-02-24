@@ -39,7 +39,14 @@ public class GameServer implements ServerNetworkListener {
     // Methods required by ServerNetworkHandler
     public void messageReceived(Message msg) {
         NewClientMessage ncm = (NewClientMessage) msg;
+	updatePlayfield(ncm);
         networkHandler.actionMessageSend(ncm.target, ncm.ID, ncm.type);
+    }
+    
+    public void updatePlayfield(NewClientMessage msg)
+    {
+	    
+	    
     }
     
     public Message removeConnection(int id){
@@ -48,6 +55,8 @@ public class GameServer implements ServerNetworkListener {
         return (iniCM);
     }
 
+    
+    
     // -------------------------------------------------------------------------
     public Message newConnectionReceived(int connectionID) throws Exception {
         // put player on random playfield
@@ -64,7 +73,7 @@ public class GameServer implements ServerNetworkListener {
         NewClientMessage m = null;
         ColorRGBA color = null;
         switch (type) {
-            case 1: // absorb
+            case 1: // start absorb
                 color = playfield.absorb(target, source);
                 m = new NewClientMessage(source, playfield.data, 1, target, color);
                 break;
@@ -79,6 +88,14 @@ public class GameServer implements ServerNetworkListener {
             case 4: // donate
                 color = playfield.donate(target, source);
                 m = new NewClientMessage(source, playfield.data, 4, target, color);
+                break;
+	    case 5: // end absorb
+                color = playfield.donate(target, source);
+                m = new NewClientMessage(source, playfield.data, 5, target, color);
+                break;
+	    case 6: // end infuse
+                color = playfield.donate(target, source);
+                m = new NewClientMessage(source, playfield.data, 6, target, color);
                 break;
             default:
                 break;
