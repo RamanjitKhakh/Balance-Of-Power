@@ -110,10 +110,8 @@ public class GameClient extends SimpleApplication implements ClientNetworkListen
 		if(isAbsorbing)
 		{
 			actionTimer+=tpf;
-		//System.out.println("actionTimer: " + actionTimer);
 			if(actionTimer >= ACTION_INTERVAL)
 			{
-				System.out.println("client sending absorb damage message");
 				actionTimer=0;
 				networkHandler.send(new NewClientMessage(ID,
 						currentPlayField,
@@ -125,10 +123,8 @@ public class GameClient extends SimpleApplication implements ClientNetworkListen
 		if(isInfusing)
 		{
 			actionTimer+=tpf;
-		//System.out.println("actionTimer: " + actionTimer);
 			if(actionTimer >= ACTION_INTERVAL)
 			{
-				System.out.println("client sending infuse message");
 				actionTimer=0;
 				networkHandler.send(new NewClientMessage(ID,
 						currentPlayField,

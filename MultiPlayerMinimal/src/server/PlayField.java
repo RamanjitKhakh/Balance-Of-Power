@@ -17,6 +17,8 @@ public class PlayField {
     public final static float MINMAX = 7f;
     public final static float RADIUS = 1f;
     public LinkedList<FieldData> data;
+    private static final int INFUSION_DMG = 1;
+    private static final int ABSORB_DMG = 1;
 
     // -------------------------------------------------------------------------
     public PlayField() {
@@ -55,8 +57,11 @@ public class PlayField {
     public ColorRGBA absorb(int target, int source) {
         for (FieldData fd : data) {
             if (fd.id == target) {
-                
-            }
+                fd.hp -= ABSORB_DMG;
+            }else if(fd.id == source)
+	    {
+		fd.hp += ABSORB_DMG;
+	    }
         }
         return ColorRGBA.randomColor();
     }
@@ -80,8 +85,11 @@ public class PlayField {
     public ColorRGBA infuse(int target, int source) {
         for (FieldData fd : data) {
             if (fd.id == target) {
-                System.out.println("infuse message sent");
-            }
+                fd.hp += INFUSION_DMG;
+            }else if(fd.id == source)
+	    {
+		fd.hp -= INFUSION_DMG;    
+	    }
         }
         return ColorRGBA.randomColor();
     }
