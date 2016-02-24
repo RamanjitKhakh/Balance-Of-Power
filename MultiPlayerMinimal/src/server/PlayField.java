@@ -62,9 +62,16 @@ public class PlayField {
     }
 
     public ColorRGBA attack(int target, int source) {
+        int damage = 0;
+        for (FieldData fd : data) {
+            if (fd.id == source) {
+                damage = fd.hp / 2;
+                fd.hp /= 2;
+            }
+        }
         for (FieldData fd : data) {
             if (fd.id == target) {
-                System.out.println("attack message sent");
+                fd.hp -= damage;
             }
         }
         return ColorRGBA.randomColor();

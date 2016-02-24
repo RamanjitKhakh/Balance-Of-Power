@@ -371,11 +371,10 @@ public class GameClient extends SimpleApplication implements ClientNetworkListen
                         
                         break;
                     case 2: // attack
+                        int damage = 0;
                         System.out.println(ncm.ID + " is Attacking " + ncm.target);
                         for (Spatial b : rootNode.getChildren()) {
-                            if (b instanceof Ball && ((Ball) b).id == ncm.target) {
-                                ((Ball) b).getMaterial().setColor("Ambient", ncm.color);
-                                rootNode.updateGeometricState();
+                            if (b instanceof Ball && ((Ball) b).id == ncm.ID) {
                                 new SingleBurstParticleEmitter(this, rootNode, ((Ball) b).getWorldTranslation());
                             }
                         }
