@@ -33,7 +33,7 @@ public class NewClientMessage extends AbstractMessage {
         this.type = 0;  // new client connection message
         this.ID = ID;
         this.field = playfield;
-        this.target = 0;
+        this.target = -1;
         this.color = null;
     }
     

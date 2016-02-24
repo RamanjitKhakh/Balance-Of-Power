@@ -427,15 +427,7 @@ public class GameClient extends SimpleApplication implements ClientNetworkListen
                         }
                         
                         
-                        for(FieldData fd: ncm.field){
-                            if(this.ID == fd.id){
-                                //System.out.println("you were attacked!! " + fd.hp + " hp left!!!");
-                                //int indexOf = ncm.field.indexOf(fd);
-                                //System.out.println("the client playfield has " + currentPlayField.get(indexOf).hp );
-                                health.setText("Your Health is " + fd.hp);
-
-                            }
-                        }
+                       
 
                         
                         break;
@@ -483,6 +475,19 @@ public class GameClient extends SimpleApplication implements ClientNetworkListen
                     default:
                         break;
 		}
+                System.out.println(ncm.target);
+                if(ncm.target != -1){
+                    for(FieldData fd: ncm.field){
+                               if(this.ID == fd.id){
+                                   //System.out.println("you were attacked!! " + fd.hp + " hp left!!!");
+                                   //int indexOf = ncm.field.indexOf(fd);
+                                   //System.out.println("the client playfield has " + currentPlayField.get(indexOf).hp );
+                                   health.setText("Your Health is " + fd.hp);
+
+                               }
+                    }
+                }
+                
 	}
 
 	public void onAnalog(String name, float value, float tpf) {
