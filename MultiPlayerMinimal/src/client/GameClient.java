@@ -126,7 +126,13 @@ public class GameClient extends SimpleApplication implements ClientNetworkListen
           
            health.setSize(bmf.getCharSet().getRenderedSize() * 1f);
            health.setColor(ColorRGBA.White);
-           health.setText("Your Health is " + playerBall.hp);
+           //currentPlayField.get(playerBall.id);
+           for(FieldData fd: currentPlayField){
+               if(fd.id == this.ID){
+                   health.setText("Your Health is " + fd.hp);
+               }
+           }
+           
            
            float lineY = settings.getHeight() - health.getLineHeight();
            float lineX = 0;
@@ -361,6 +367,9 @@ public class GameClient extends SimpleApplication implements ClientNetworkListen
                                 ((Ball) b).getMaterial().setColor("Ambient", ncm.color);
                                 rootNode.updateGeometricState();
                             }
+                        }
+                        if(ncm.target == playerBall.id){
+                            //System.out.println("You were attacked!! " + playerBall.hp + " and " + ncm.ID);
                         }
                         break;
                     case 2: // attack

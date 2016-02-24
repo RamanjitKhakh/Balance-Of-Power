@@ -21,7 +21,8 @@ public class FieldData {
     public static int ABSORBING = 3;
     public static int BEING_ABOSRBED = 4;
     public static int DEAD = 5;
-	
+
+    public int hp = 100;
     public int id;
     public float x, y, z;
     public ColorRGBA color;
