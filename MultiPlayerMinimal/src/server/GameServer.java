@@ -80,12 +80,6 @@ public class GameServer implements ServerNetworkListener {
             case 2: // attack
                 color = playfield.attack(target, source);
                 m = new NewClientMessage(source, playfield.data, 2, target, color);
-                System.out.println("REACHEDDD");
-                for(FieldData fd: playfield.data){
-                    if(fd.hp <= 0){
-                        return removeConnection(fd.id);
-                    }
-                }
                 break;
             case 3: // start infuse
 		color = ColorRGBA.randomColor();    
@@ -114,6 +108,12 @@ public class GameServer implements ServerNetworkListener {
             default:
                 break;
         }
+        
+                for(FieldData fd: playfield.data){
+                    if(fd.hp <= 0){
+                        return removeConnection(fd.id);
+                    }
+                }
         return m;
     }
 }
