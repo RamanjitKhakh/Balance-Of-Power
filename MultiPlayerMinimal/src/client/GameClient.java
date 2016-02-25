@@ -395,7 +395,9 @@ public class GameClient extends SimpleApplication implements ClientNetworkListen
                                     
                                     if(found == false){
                                         balls.get(u).removeFromParent();
-					
+                                        if(this.ID == balls.get(u).id){
+                                            health.setText("Your Health is 0 GAME OVER!!!!");
+                                        }
 					if(balls.get(u).id == target )
 					{
 						rootNode.detachChildNamed("arrowgeo");
