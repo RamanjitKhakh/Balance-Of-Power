@@ -318,9 +318,7 @@ public class GameClient extends SimpleApplication implements ClientNetworkListen
 					currentPlayField,
 					NewClientMessage.MSG_ATTACK,
 					this.target));
-			}
-			
-			
+			}			
 		}
 
 		if(name.equals("infuse") )
@@ -402,7 +400,13 @@ public class GameClient extends SimpleApplication implements ClientNetworkListen
 					{
 						rootNode.detachChildNamed("arrowgeo");
 					}
-                                        //playfield.sa.getRootNode().detachChild(balls.get(u));
+                                    }
+                                    //update all client health after removal
+                                    for(FieldData fd: ncm.field){
+                                        if(this.ID == fd.id){
+                                            health.setText("Your Health is " + fd.hp);
+
+                                        }
                                     }
                                     
                                 }
@@ -433,10 +437,6 @@ public class GameClient extends SimpleApplication implements ClientNetworkListen
                                 
                             }
                         }
-                        
-                        
-                       
-
                         
                         break;
                     case 3: // infusion
@@ -485,7 +485,7 @@ public class GameClient extends SimpleApplication implements ClientNetworkListen
                     default:
                         break;
 		}
-                System.out.println(ncm.target);
+                
                 if(ncm.target != -1){
                     if((this.ID == ncm.target) || (this.ID == ncm.ID) ){
                         for(FieldData fd: ncm.field){
@@ -500,12 +500,7 @@ public class GameClient extends SimpleApplication implements ClientNetworkListen
 	}
 
 	public void onAnalog(String name, float value, float tpf) {
-		/*
-		if (name.equals("TB_MOUSELEFT")) {
-			//System.out.println("left mouse button clicked!");
-			getRayCollision();
-		}
-		*/
+		
 	}
 
 	private void getRayCollision() {
