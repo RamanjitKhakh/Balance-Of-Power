@@ -68,6 +68,7 @@ public class GameClient extends SimpleApplication implements ClientNetworkListen
 	boolean ShotsFired = false;
         boolean blast = true;
         Vector3f HitLocation;
+        boolean targeting = false;
         
 	// -------------------------------------------------------------------------
 	public static void main(String[] args) {
@@ -267,97 +268,98 @@ public class GameClient extends SimpleApplication implements ClientNetworkListen
 	public void onAction(String name, boolean isPressed, float tpf) {
 		if (name.equals("TB_MOUSELEFT") && isPressed) {
 			//System.out.println("left mouse button clicked!");
+                        //targeting = true;
 			getRayCollision();
 				
 			
 		}
-		
-		if(name.equals("shift"))
-		{
-			if(isPressed && !shiftPressed)
-			{
-				shiftPressed = true;
-				//System.out.println("shift pressed");
-			}else if(!isPressed && shiftPressed)
-			{
-				shiftPressed = false;
-				//System.out.println("shift released");
-			}
-			
-		}
-		
-		if(name.equals("attack") ) 
-		{
-			
-			if(!shiftPressed)
-			{
-				if(isPressed && !aPressed)
-				{
-					aPressed = true;
-					System.out.println("begin absorb");
-					actionTimer = 0;
-					isAbsorbing = true;
-                                        networkHandler.send(new NewClientMessage(ID,
-						currentPlayField,
-						NewClientMessage.MSG_BEGIN_ABSORB,
-						this.target));
-				}else if(!isPressed && aPressed)
-				{
-					aPressed = false;
-					System.out.println("stop absorb");
-					actionTimer = 0;
-					isAbsorbing = false;
-					networkHandler.send(new NewClientMessage(ID,
-						currentPlayField,
-						NewClientMessage.MSG_END_ABSORB,
-						this.target));
-				}
-			}else if(isPressed){
-				System.out.println("attack");
-                                networkHandler.send(new NewClientMessage(ID,
-					currentPlayField,
-					NewClientMessage.MSG_ATTACK,
-					this.target));
-			}			
-		}
+		if(targeting){
+                    if(name.equals("shift"))
+                    {
+                            if(isPressed && !shiftPressed)
+                            {
+                                    shiftPressed = true;
+                                    //System.out.println("shift pressed");
+                            }else if(!isPressed && shiftPressed)
+                            {
+                                    shiftPressed = false;
+                                    //System.out.println("shift released");
+                            }
 
-		if(name.equals("infuse") )
-		{
-			if(!shiftPressed)
-			{
-				if(isPressed && !sPressed)
-				{
-					sPressed = true;
-					System.out.println("begin infuse");
-					actionTimer = 0;
-					isInfusing = true;
-                                        networkHandler.send(new NewClientMessage(ID,
-						currentPlayField,
-						NewClientMessage.MSG_BEGIN_INFUSE,
-						this.target));
-				}else if(!isPressed && sPressed)
-				{
-					sPressed = false;
-					System.out.println("stop infuse");
-					actionTimer = 0;
-					isInfusing = false;
-					networkHandler.send(new NewClientMessage(ID,
-						currentPlayField,
-						NewClientMessage.MSG_END_INFUSE,
-						this.target));
-					
-				}
-			}else if(isPressed){
-				System.out.println("donation");
-                                networkHandler.send(new NewClientMessage(ID,
-					currentPlayField,
-					NewClientMessage.MSG_DONATION,
-					this.target));
-			}
-			
-			
-		}
-		
+                    }
+
+                    if(name.equals("attack") ) 
+                    {
+
+                            if(!shiftPressed)
+                            {
+                                    if(isPressed && !aPressed)
+                                    {
+                                            aPressed = true;
+                                            System.out.println("begin absorb");
+                                            actionTimer = 0;
+                                            isAbsorbing = true;
+                                            networkHandler.send(new NewClientMessage(ID,
+                                                    currentPlayField,
+                                                    NewClientMessage.MSG_BEGIN_ABSORB,
+                                                    this.target));
+                                    }else if(!isPressed && aPressed)
+                                    {
+                                            aPressed = false;
+                                            System.out.println("stop absorb");
+                                            actionTimer = 0;
+                                            isAbsorbing = false;
+                                            networkHandler.send(new NewClientMessage(ID,
+                                                    currentPlayField,
+                                                    NewClientMessage.MSG_END_ABSORB,
+                                                    this.target));
+                                    }
+                            }else if(isPressed){
+                                    System.out.println("attack");
+                                    networkHandler.send(new NewClientMessage(ID,
+                                            currentPlayField,
+                                            NewClientMessage.MSG_ATTACK,
+                                            this.target));
+                            }			
+                    }
+
+                    if(name.equals("infuse") )
+                    {
+                            if(!shiftPressed)
+                            {
+                                    if(isPressed && !sPressed)
+                                    {
+                                            sPressed = true;
+                                            System.out.println("begin infuse");
+                                            actionTimer = 0;
+                                            isInfusing = true;
+                                            networkHandler.send(new NewClientMessage(ID,
+                                                    currentPlayField,
+                                                    NewClientMessage.MSG_BEGIN_INFUSE,
+                                                    this.target));
+                                    }else if(!isPressed && sPressed)
+                                    {
+                                            sPressed = false;
+                                            System.out.println("stop infuse");
+                                            actionTimer = 0;
+                                            isInfusing = false;
+                                            networkHandler.send(new NewClientMessage(ID,
+                                                    currentPlayField,
+                                                    NewClientMessage.MSG_END_INFUSE,
+                                                    this.target));
+
+                                    }
+                            }else if(isPressed){
+                                    System.out.println("donation");
+                                    networkHandler.send(new NewClientMessage(ID,
+                                            currentPlayField,
+                                            NewClientMessage.MSG_DONATION,
+                                            this.target));
+                            }
+
+
+                    }
+                }//end of targeting if
 
 	}
 
@@ -563,6 +565,7 @@ public class GameClient extends SimpleApplication implements ClientNetworkListen
 					arrowGeo.setMaterial(arrowMat);
 					arrowGeo.setLocalTranslation(playerBall.getLocalTranslation());
 					rootNode.attachChild(arrowGeo);
+                                        targeting = true;
 				}
 					
 				return;
