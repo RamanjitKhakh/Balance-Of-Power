@@ -403,6 +403,10 @@ public class GameClient extends SimpleApplication implements ClientNetworkListen
 						rootNode.detachChildNamed("arrowgeo");
 					}
                                     }
+                                    // set targeting to false for both the victim and attacker
+                                    if( (this.ID == ncm.ID) || (this.target == ncm.ID)){
+                                        targeting = false;
+                                    }
                                     //update all client health after removal
                                     for(FieldData fd: ncm.field){
                                         if(this.ID == fd.id){
