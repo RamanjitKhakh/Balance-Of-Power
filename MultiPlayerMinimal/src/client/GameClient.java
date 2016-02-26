@@ -408,6 +408,8 @@ public class GameClient extends SimpleApplication implements ClientNetworkListen
                                     }
                                     // set targeting to false for both the victim and attacker
                                     if( (this.ID == ncm.ID) || (this.target == ncm.ID)){
+					isInfusing = false;
+					isAbsorbing = false;
                                         targeting = false;
                                     }
                                     //update all client health after removal
