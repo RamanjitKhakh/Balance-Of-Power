@@ -69,6 +69,7 @@ public class GameClient extends SimpleApplication implements ClientNetworkListen
         boolean blast = true;
         Vector3f HitLocation;
         boolean targeting = false;
+        boolean dead = false;
         
 	// -------------------------------------------------------------------------
 	public static void main(String[] args) {
@@ -266,7 +267,7 @@ public class GameClient extends SimpleApplication implements ClientNetworkListen
 
 	// key action
 	public void onAction(String name, boolean isPressed, float tpf) {
-		if (name.equals("TB_MOUSELEFT") && isPressed) {
+		if (name.equals("TB_MOUSELEFT") && isPressed && !dead) {
 			//System.out.println("left mouse button clicked!");
                         //targeting = true;
 			getRayCollision();
@@ -397,6 +398,8 @@ public class GameClient extends SimpleApplication implements ClientNetworkListen
                                         balls.get(u).removeFromParent();
                                         if(this.ID == balls.get(u).id){
                                             health.setText("Your Health is 0 GAME OVER!!!!");
+                                            rootNode.detachChildNamed("arrowgeo");
+                                            dead = true;
                                         }
 					if(balls.get(u).id == target )
 					{
@@ -570,7 +573,9 @@ public class GameClient extends SimpleApplication implements ClientNetworkListen
 					arrowGeo.setLocalTranslation(playerBall.getLocalTranslation());
 					rootNode.attachChild(arrowGeo);
                                         targeting = true;
-				}
+				} else if (target == this.ID && arrowGeo != null) {
+                                    rootNode.detachChildNamed("arrowgeo");
+                                }
 					
 				return;
 			}
