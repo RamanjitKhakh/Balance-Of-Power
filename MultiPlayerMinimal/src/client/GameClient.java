@@ -70,7 +70,8 @@ public class GameClient extends SimpleApplication implements ClientNetworkListen
         Vector3f HitLocation;
         boolean targeting = false;
         boolean dead = false;
-        
+        boolean removing = false;
+        Ball ballToRemove;
 	// -------------------------------------------------------------------------
 	public static void main(String[] args) {
 		System.out.println("Starting Client");
@@ -113,6 +114,11 @@ public class GameClient extends SimpleApplication implements ClientNetworkListen
                     ShotsFired = false;
                     //new SingleBurstParticleEmitter(this, rootNode, ((Ball) b).getWorldTranslation(), true);
                     new SingleBurstParticleEmitter(this, rootNode, HitLocation, blast);
+                }
+                
+                if(removing){
+                    removing = false;
+                    ballToRemove.removeFromParent();
                 }
 		
 		if(isAbsorbing)
@@ -395,7 +401,9 @@ public class GameClient extends SimpleApplication implements ClientNetworkListen
                                     }
                                     
                                     if(found == false){
-                                        balls.get(u).removeFromParent();
+                                        ballToRemove = balls.get(u);
+                                        removing = true;
+                                        //balls.get(u).removeFromParent();
                                         if(this.ID == balls.get(u).id){
                                             health.setText("Your Health is 0 GAME OVER!!!!");
                                             rootNode.detachChildNamed("arrowgeo");
