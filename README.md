@@ -7,8 +7,10 @@ This jmonkey Lab is a simple multiplayer server client model.
 
 The code can be run from the jmonkey IDE
 
-Team memebers:
+Team members:
 
 Ramanjit Khakh
+
 Doreen Lu
+
 Amadeusz Deutry
