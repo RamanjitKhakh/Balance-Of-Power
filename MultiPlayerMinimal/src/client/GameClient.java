@@ -52,6 +52,15 @@ public class GameClient extends SimpleApplication implements ClientNetworkListen
 	private boolean rayLock = false;
 	private boolean isAbsorbing = false;
 	private boolean isInfusing = false;
+	private boolean targeting = false;
+        private boolean dead = false;
+        private boolean removing = false;
+	private boolean ShotsFired = false;
+        private boolean blast = true;
+	private boolean renderArrow = false;
+	private boolean detachArrow = false;
+	
+	private CollisionResult cr;
 	
 	//controls how often an action is sent to the server
 	private static float ACTION_INTERVAL = 0.5f;
@@ -65,12 +74,9 @@ public class GameClient extends SimpleApplication implements ClientNetworkListen
 	Material arrowMat;  //Material for arrow
 	Ball playerBall;    //The ball object of this client's player
 	BitmapText health;
-	boolean ShotsFired = false;
-        boolean blast = true;
+	
         Vector3f HitLocation;
-        boolean targeting = false;
-        boolean dead = false;
-        boolean removing = false;
+        
         Ball ballToRemove;
 	// -------------------------------------------------------------------------
 	public static void main(String[] args) {
@@ -145,6 +151,37 @@ public class GameClient extends SimpleApplication implements ClientNetworkListen
 						NewClientMessage.MSG_INFUSE_ADD,
 						this.target));
 			}
+		}
+		
+		if(renderArrow)
+		{
+			//remove old arrow
+			rootNode.detachChildNamed("arrowgeo");
+
+			//determine new arrow
+			Vector3f arrowVec = cr.getGeometry()
+				.getWorldTranslation()
+				.subtract(playerBall.getWorldTranslation());
+
+			//scale the arrow so it doesn't clip into target ball
+			float newLen = (arrowVec.length() - 1)/arrowVec.length();
+			arrowVec = arrowVec.mult(newLen);
+
+			//create and position new arrow
+			targetArrow = new Arrow(arrowVec);
+			arrowGeo = new Geometry("arrowgeo", targetArrow);
+			arrowGeo.setMaterial(arrowMat);
+			arrowGeo.setLocalTranslation(playerBall.getLocalTranslation());
+			rootNode.attachChild(arrowGeo);
+			targeting = true;
+			renderArrow = false;
+		}
+		
+		
+		if(detachArrow)
+		{
+			rootNode.detachChildNamed("arrowgeo");
+			detachArrow = false;
 		}
 	}
 
@@ -406,12 +443,12 @@ public class GameClient extends SimpleApplication implements ClientNetworkListen
                                         //balls.get(u).removeFromParent();
                                         if(this.ID == balls.get(u).id){
                                             health.setText("Your Health is 0 GAME OVER!!!!");
-                                            rootNode.detachChildNamed("arrowgeo");
+                                            detachArrow = true;
                                             dead = true;
                                         }
 					if(balls.get(u).id == target )
 					{
-						rootNode.detachChildNamed("arrowgeo");
+						detachArrow = true;
 					}
                                     }
                                     // set targeting to false for both the victim and attacker
@@ -565,27 +602,11 @@ public class GameClient extends SimpleApplication implements ClientNetworkListen
 				{
 					this.target = target;
 					
-					//remove old arrow
-					rootNode.detachChildNamed("arrowgeo");
+					renderArrow = true;
+					this.cr = cr;
 					
-					//determine new arrow
-					Vector3f arrowVec = cr.getGeometry()
-						.getWorldTranslation()
-						.subtract(playerBall.getWorldTranslation());
-					
-					//scale the arrow so it doesn't clip into target ball
-					float newLen = (arrowVec.length() - 1)/arrowVec.length();
-					arrowVec = arrowVec.mult(newLen);
-					
-					//create and position new arrow
-					targetArrow = new Arrow(arrowVec);
-					arrowGeo = new Geometry("arrowgeo", targetArrow);
-					arrowGeo.setMaterial(arrowMat);
-					arrowGeo.setLocalTranslation(playerBall.getLocalTranslation());
-					rootNode.attachChild(arrowGeo);
-                                        targeting = true;
 				} else if (target == this.ID && arrowGeo != null) {
-                                    rootNode.detachChildNamed("arrowgeo");
+                                    detachArrow = false;
                                 }
 					
 				return;
