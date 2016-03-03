@@ -78,6 +78,9 @@ public class GameClient extends SimpleApplication implements ClientNetworkListen
         Vector3f HitLocation;
         
         Ball ballToRemove;
+        FieldData nextBallToAdd;
+        boolean newBallToAdd = false;
+        
 	// -------------------------------------------------------------------------
 	public static void main(String[] args) {
 		System.out.println("Starting Client");
@@ -116,9 +119,14 @@ public class GameClient extends SimpleApplication implements ClientNetworkListen
 	// -------------------------------------------------------------------------
 	@Override
 	public void simpleUpdate(float tpf) {
+            
+                if(newBallToAdd){
+                    newBallToAdd = false;
+                    playfield.addSphere(nextBallToAdd);
+                    nextBallToAdd = null;
+                }
 		if(ShotsFired){
                     ShotsFired = false;
-                    //new SingleBurstParticleEmitter(this, rootNode, ((Ball) b).getWorldTranslation(), true);
                     new SingleBurstParticleEmitter(this, rootNode, HitLocation, blast);
                 }
                 
@@ -247,13 +255,9 @@ public class GameClient extends SimpleApplication implements ClientNetworkListen
 		viewPort.addProcessor(dlsr);
 		
 		//arrow material
-		 arrowMat = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
-		//arrowMat.setBoolean("UseMaterialColors", true);
-		//arrowMat.setTexture("DiffuseMap", assetManager.loadTexture("Textures/DSCF3091.JPG"));
-		//arrowMat.setColor("Diffuse", ColorRGBA.White);
+		arrowMat = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
 		arrowMat.setColor("Color", ColorRGBA.White);
-		//arrowMat.setColor("Specular", ColorRGBA.White);
-		//arrowMat.setFloat("Shininess", 128f);
+
 	}
 
 	// -------------------------------------------------------------------------
@@ -311,8 +315,6 @@ public class GameClient extends SimpleApplication implements ClientNetworkListen
 	// key action
 	public void onAction(String name, boolean isPressed, float tpf) {
 		if (name.equals("TB_MOUSELEFT") && isPressed && !dead) {
-			//System.out.println("left mouse button clicked!");
-                        //targeting = true;
 			getRayCollision();
 				
 			
@@ -323,11 +325,9 @@ public class GameClient extends SimpleApplication implements ClientNetworkListen
                             if(isPressed && !shiftPressed)
                             {
                                     shiftPressed = true;
-                                    //System.out.println("shift pressed");
                             }else if(!isPressed && shiftPressed)
                             {
                                     shiftPressed = false;
-                                    //System.out.println("shift released");
                             }
 
                     }
@@ -340,7 +340,6 @@ public class GameClient extends SimpleApplication implements ClientNetworkListen
                                     if(isPressed && !aPressed)
                                     {
                                             aPressed = true;
-                                            System.out.println("begin absorb");
                                             actionTimer = 0;
                                             isAbsorbing = true;
                                             networkHandler.send(new NewClientMessage(ID,
@@ -350,7 +349,6 @@ public class GameClient extends SimpleApplication implements ClientNetworkListen
                                     }else if(!isPressed && aPressed)
                                     {
                                             aPressed = false;
-                                            System.out.println("stop absorb");
                                             actionTimer = 0;
                                             isAbsorbing = false;
                                             networkHandler.send(new NewClientMessage(ID,
@@ -359,7 +357,6 @@ public class GameClient extends SimpleApplication implements ClientNetworkListen
                                                     this.target));
                                     }
                             }else if(isPressed){
-                                    System.out.println("attack");
                                     networkHandler.send(new NewClientMessage(ID,
                                             currentPlayField,
                                             NewClientMessage.MSG_ATTACK,
@@ -374,7 +371,6 @@ public class GameClient extends SimpleApplication implements ClientNetworkListen
                                     if(isPressed && !sPressed)
                                     {
                                             sPressed = true;
-                                            System.out.println("begin infuse");
                                             actionTimer = 0;
                                             isInfusing = true;
                                             networkHandler.send(new NewClientMessage(ID,
@@ -384,7 +380,6 @@ public class GameClient extends SimpleApplication implements ClientNetworkListen
                                     }else if(!isPressed && sPressed)
                                     {
                                             sPressed = false;
-                                            System.out.println("stop infuse");
                                             actionTimer = 0;
                                             isInfusing = false;
                                             networkHandler.send(new NewClientMessage(ID,
@@ -394,7 +389,6 @@ public class GameClient extends SimpleApplication implements ClientNetworkListen
 
                                     }
                             }else if(isPressed){
-                                    System.out.println("donation");
                                     networkHandler.send(new NewClientMessage(ID,
                                             currentPlayField,
                                             NewClientMessage.MSG_DONATION,
@@ -418,20 +412,19 @@ public class GameClient extends SimpleApplication implements ClientNetworkListen
 			if (this.ID == -1) {
 				initGame(ncm);
 			} else {
-                            System.out.println("printing current playfield....");
                             List<Ball> balls = playfield.sa.getRootNode().descendantMatches(Ball.class);
                             
                             if(ncm.field.size() > balls.size()){
-                                System.out.println("adding...");
-                                playfield.addSphere(ncm.field.getLast());
+                                //playfield.addSphere(ncm.field.getLast());
+                                System.out.println("adding ball in next loop");
+                                nextBallToAdd = ncm.field.getLast();
+                                newBallToAdd = true;
+                                
                             }else{
-                                System.out.println("removing...");
                                 for(int u =0 ; u < balls.size(); u++){
-                                    //System.out.println(balls.get(u).id + " is currently included!");
                                     boolean found = false;
                                     for(int i = 0; i < ncm.field.size(); i++){
                                         FieldData fd = ncm.field.get(i);
-                                        //System.out.println(fd.id + " " + fd.x + " , " + fd.y + " , " + fd.z + ".");
                                         if(fd.id == balls.get(u).id){
                                             found = true;
                                         }
@@ -474,7 +467,6 @@ public class GameClient extends SimpleApplication implements ClientNetworkListen
 			}
                         break;
                     case 1: // absorb
-                        System.out.println(ncm.ID + " is Absorbing from " + ncm.target);
                         for (Spatial b : rootNode.getChildren()) {
                             if (b instanceof Ball && ((Ball) b).id == ncm.target) {
                                 ((Ball) b).getMaterial().setColor("Ambient", ncm.color);
@@ -485,7 +477,6 @@ public class GameClient extends SimpleApplication implements ClientNetworkListen
                         break;
                     case 2: // attack
                         int damage = 0;
-                        System.out.println(ncm.ID + " is Attacking " + ncm.target);
                         for (Spatial b : rootNode.getChildren()) {
                             if (b instanceof Ball && ((Ball) b).id == ncm.target) {
                                 HitLocation = ((Ball) b).getWorldTranslation();
@@ -497,7 +488,6 @@ public class GameClient extends SimpleApplication implements ClientNetworkListen
                         
                         break;
                     case 3: // infusion
-                        System.out.println(ncm.ID + " is Infusing with " + ncm.target);
                         for (Spatial b : rootNode.getChildren()) {
                             if (b instanceof Ball && ((Ball) b).id == ncm.target) {
                                 ((Ball) b).getMaterial().setColor("Ambient", ncm.color);
@@ -506,7 +496,6 @@ public class GameClient extends SimpleApplication implements ClientNetworkListen
                         }
                         break;
                     case 4: // donation
-                        System.out.println(ncm.ID + " is Donating to " + ncm.target);
                         for (Spatial b : rootNode.getChildren()) {
                             if (b instanceof Ball && ((Ball) b).id == ncm.target) {
                                 HitLocation = ((Ball) b).getWorldTranslation();
@@ -516,7 +505,6 @@ public class GameClient extends SimpleApplication implements ClientNetworkListen
                         }
                         break;
 		    case 5: // end absorb
-                        System.out.println(ncm.ID + " has stopped absorbing " + ncm.target);
                         for (Spatial b : rootNode.getChildren()) {
                             if (b instanceof Ball && ((Ball) b).id == ncm.target) {
                                 ((Ball) b).getMaterial().setColor("Ambient", ncm.color);
@@ -525,7 +513,6 @@ public class GameClient extends SimpleApplication implements ClientNetworkListen
                         }
                         break;
 		    case 6: // end infuse
-                        System.out.println(ncm.ID + " has stopped infusing " + ncm.target);
                         for (Spatial b : rootNode.getChildren()) {
                             if (b instanceof Ball && ((Ball) b).id == ncm.target) {
                                 ((Ball) b).getMaterial().setColor("Ambient", ncm.color);
@@ -597,7 +584,6 @@ public class GameClient extends SimpleApplication implements ClientNetworkListen
 			if(cr.getGeometry() instanceof Ball)
 			{
 				int target = ((Ball)cr.getGeometry()).id;
-				System.out.println("ray collision with "+ target);
 				if(target != this.ID)
 				{
 					this.target = target;
